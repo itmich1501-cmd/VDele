@@ -13,6 +13,7 @@
         "packagesPath": "C:\\Users\\nidhe\\.nuget\\packages\\",
         "outputPath": "C:\\Projects\\VDele\\src\\VDele.Api\\obj\\",
         "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
@@ -50,22 +51,27 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[10.0.7, )"
-            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[10.0.2, )"
+              "version": "[10.0.2, )",
+              "versionCentrallyManaged": true
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.1, )",
+              "versionCentrallyManaged": true
             },
             "Swashbuckle.AspNetCore.SwaggerUI": {
               "target": "Package",
-              "version": "[10.1.7, )"
+              "version": "[10.1.7, )",
+              "versionCentrallyManaged": true
             }
+          },
+          "centralPackageVersions": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.7",
+            "Microsoft.AspNetCore.OpenApi": "10.0.2",
+            "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
+            "Swashbuckle.AspNetCore.SwaggerUI": "10.1.7"
           },
           "imports": [
             "net461",
