@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VDele.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab281d2fdaed083cc969efcca466a2756a991893")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16731c88fbc447dae7af807a6154a6800741428a")]
 [assembly: System.Reflection.AssemblyProductAttribute("VDele.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VDele.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

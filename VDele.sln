@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDele.Domain", "src\VDele.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDele.Infrastructure", "src\VDele.Infrastructure\VDele.Infrastructure.csproj", "{57AD2964-2862-43D3-AF28-DDF23903BF0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDele.Persistence", "src\VDele.Persistence\VDele.Persistence.csproj", "{492A0784-A9E4-437A-AC86-F86672E8F312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDele.Contracts", "src\VDele.Contracts\VDele.Contracts.csproj", "{492A0784-A9E4-437A-AC86-F86672E8F312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
