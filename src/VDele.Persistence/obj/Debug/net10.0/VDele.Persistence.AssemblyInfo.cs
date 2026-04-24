@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VDele.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab281d2fdaed083cc969efcca466a2756a991893")]
 [assembly: System.Reflection.AssemblyProductAttribute("VDele.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VDele.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
