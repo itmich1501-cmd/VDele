@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_DB: vdele_db
@@ -10,7 +10,7 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres-data:
+  postgres_data:
