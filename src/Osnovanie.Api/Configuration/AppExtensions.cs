@@ -8,6 +8,7 @@ public static class AppExtensions
         // app.UseSerilogRequestLogging();
 
         app.MapOpenApi();
+
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/openapi/v1.json", "VDele API v1");

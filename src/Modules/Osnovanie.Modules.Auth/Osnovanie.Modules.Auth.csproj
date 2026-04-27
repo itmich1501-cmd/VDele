@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CSharpFunctionalExtensions" />
+        <PackageReference Include="FluentValidation" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
@@ -15,6 +17,17 @@
     <ItemGroup>
       <Folder Include="Contracts\" />
       <Folder Include="DataBase\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+        <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\10.0.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Osnovanie.Framework\Osnovanie.Framework.csproj" />
+      <ProjectReference Include="..\..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
     </ItemGroup>
 
 </Project>

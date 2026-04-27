@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Osnovanie.Modules.VDele", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Osnovanie.Shared", "src\Osnovanie.Shared\Osnovanie.Shared.csproj", "{297588F4-3F17-497F-9DCC-4E10CE5FA589}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Osnovanie.Framework", "src\Osnovanie.Framework\Osnovanie.Framework.csproj", "{982DAD91-1E4F-43AB-8490-48B9E2278C05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,18 @@ Global
 		{297588F4-3F17-497F-9DCC-4E10CE5FA589}.Release|x64.Build.0 = Release|Any CPU
 		{297588F4-3F17-497F-9DCC-4E10CE5FA589}.Release|x86.ActiveCfg = Release|Any CPU
 		{297588F4-3F17-497F-9DCC-4E10CE5FA589}.Release|x86.Build.0 = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|x64.Build.0 = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Debug|x86.Build.0 = Debug|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|x64.ActiveCfg = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|x64.Build.0 = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|x86.ActiveCfg = Release|Any CPU
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,5 +126,6 @@ Global
 		{4D062A2E-4BD6-4403-BC97-F54B69F1C755} = {D62CB018-4A5E-45A9-9861-F808DEDC43C3}
 		{3394F0BC-39E3-43E0-9B7F-F15E3CACCBD5} = {D62CB018-4A5E-45A9-9861-F808DEDC43C3}
 		{297588F4-3F17-497F-9DCC-4E10CE5FA589} = {D62CB018-4A5E-45A9-9861-F808DEDC43C3}
+		{982DAD91-1E4F-43AB-8490-48B9E2278C05} = {D62CB018-4A5E-45A9-9861-F808DEDC43C3}
 	EndGlobalSection
 EndGlobal

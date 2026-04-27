@@ -15,88 +15,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7dd6b396-005c-405f-ad2c-63e2017e4864" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Infrastructure/AuthDbContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/Configuration/AppExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/Osnovanie.Api.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/Properties/launchSettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Api/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Osnovanie.Infrastructure/Osnovanie.Infrastructure.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VDele/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VDele/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VDele/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VDele/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VDele/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VDele.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Osnovanie.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/VDele.Api.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/VDele.Api.http" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/Debug/net10.0/VDele.Api.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/VDele.Api.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/VDele.Api.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/VDele.Api.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Api/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/VDele.Application.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/VDele.Application.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/VDele.Application.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/VDele.Application.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/VDele.Application.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/Debug/net10.0/VDele.Application.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/VDele.Application.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/VDele.Application.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/VDele.Application.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Application/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Contracts/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Contracts/VDele.Contracts.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/Users/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Domain/User.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/VDele.Domain.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/VDele.Domain.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/VDele.Domain.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/VDele.Domain.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/VDele.Domain.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/Debug/net10.0/VDele.Domain.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/VDele.Domain.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/VDele.Domain.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/VDele.Domain.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Domain/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/DataBase/AuthDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/VDele.Infrastructure.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/VDele.Infrastructure.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/VDele.Infrastructure.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/VDele.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/VDele.Infrastructure.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/Debug/net10.0/VDele.Infrastructure.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/VDele.Infrastructure.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/VDele.Infrastructure.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/VDele.Infrastructure.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VDele.Infrastructure/obj/rider.project.restore.info" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Features/RegisterUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Directory.Packages.props" beforeDir="false" afterPath="$PROJECT_DIR$/Directory.Packages.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Osnovanie.Modules.Auth.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Osnovanie.Modules.Auth.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +28,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="7" />
+    <option name="cachedIndexableFilesCount" value="1" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -126,8 +47,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/Modules/Osnovanie.Modules.Auth/Features/RegisterUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Osnovanie.Api/Configuration/AppExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Osnovanie.Shared/Class1.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -137,6 +58,7 @@
     <commands />
     <urls />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7,
   &quot;fromUser&quot;: false
@@ -214,13 +136,23 @@
       <option name="presentableId" value="Default" />
       <updated>1777026466232</updated>
       <workItem from="1777026482346" duration="9487000" />
-      <workItem from="1777088803066" duration="6675000" />
+      <workItem from="1777088803066" duration="8880000" />
     </task>
+    <task id="LOCAL-00001" summary="cleanup: remove unused files and dependencies">
+      <option name="closed" value="true" />
+      <created>1777120735082</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1777120735082</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -235,6 +167,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="cleanup: remove unused files and dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleanup: remove unused files and dependencies" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
