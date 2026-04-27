@@ -17,7 +17,7 @@ public record Error
         InvalidField = invalidField;
     }
     
-    public static Error Validation(string code, string message, string? invalidField = null) => 
+    public static Error Validation(string? code, string? message, string? invalidField = null) => 
         new(code, message, ErrorType.VALIDATION, invalidField: null);
     
     public static Error Failure(string code, string message) => new(code, message, ErrorType.FAILURE);

@@ -1,3 +1,6 @@
+using Osnovanie.Framework.EndpointSettings;
+using Serilog;
+
 namespace Osnovanie.Api.Configuration;
 
 public static class AppExtensions
@@ -9,13 +12,16 @@ public static class AppExtensions
 
         app.MapOpenApi();
 
+        app.UseSerilogRequestLogging();
+
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/openapi/v1.json", "VDele API v1");
         });
+        
+        var apiGroup = app.MapGroup("api");
 
-        // RouteGroupBuilder apiGroup = app.MapGroup("/api/lessons").WithOpenApi();
-        // app.MapEndpoints(apiGroup);
+        app.MapEndpoints(apiGroup);
 
         return app;
     }

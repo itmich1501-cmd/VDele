@@ -1,39 +1,34 @@
-using FluentValidation;
-using Microsoft.AspNetCore.Identity;
+using System.Globalization;
 using Osnovanie.Api.Configuration;
-using Osnovanie.Modules.Auth.Domain;
-using Osnovanie.Modules.Auth.Features;
-using Osnovanie.Modules.Auth.Infrastructure;
+using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.Auth.Configuration;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+    .CreateBootstrapLogger();
 
-builder.Services.AddOpenApi();
-
-builder.Services.AddScoped<AuthDbContext>(_ => new AuthDbContext(builder.Configuration.GetConnectionString("Database")!));
-
-builder.Services.AddScoped<RegisterUserHandler>();
-
-builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserRequestValidator).Assembly);
-
-builder.Services.Configure<IdentityOptions>(option =>
+try
 {
-    option.Password.RequireDigit = false;
-    option.Password.RequireNonAlphanumeric = false;
-    option.User.RequireUniqueEmail = true;
-});
+    Log.Information("Starting web application");
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentity<User, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AuthDbContext>();
+    builder.Services.AddApiConfiguration(builder.Configuration);
 
-builder.Services.AddOpenApi();
+    builder.Services.AddAuthModule(builder.Configuration);
+    
+    var app = builder.Build();
 
-builder.Services.AddControllers();
+    app.Configure();
 
-var app = builder.Build();
-
-app.Configure();
-
-app.MapControllers();
-
-app.Run();
-
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
