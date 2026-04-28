@@ -55,7 +55,7 @@ public sealed class RegisterUserHandler
     public RegisterUserHandler(
         UserManager<User> userManager, 
         IValidator<RegisterUserRequest> validator,
-        ILogger<RegisterUserHandler> logger)
+        ILogger<RegisterUserHandler> logger) 
     {
         _userManager = userManager;
         _validator = validator;

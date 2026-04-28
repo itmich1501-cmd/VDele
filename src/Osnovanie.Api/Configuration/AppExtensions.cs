@@ -1,3 +1,4 @@
+using Osnovanie.Api.Middlewares;
 using Osnovanie.Framework.EndpointSettings;
 using Serilog;
 
@@ -7,12 +8,10 @@ public static class AppExtensions
 {
     public static IApplicationBuilder Configure(this WebApplication app)
     {
-        // app.UseRequestCorrelationId();
-        // app.UseSerilogRequestLogging();
+        app.UseRequestCorrelationId();
+        app.UseSerilogRequestLogging();
 
         app.MapOpenApi();
-
-        app.UseSerilogRequestLogging();
 
         app.UseSwaggerUI(options =>
         {

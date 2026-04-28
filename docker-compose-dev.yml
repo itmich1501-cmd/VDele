@@ -25,6 +25,19 @@ services:
     volumes:
       - seq_data:/data
 
+  osnovanie-api:
+    container_name: osnovanie-api
+    build:
+      context: .
+      dockerfile: src/Osnovanie.Api/Dockerfile
+    ports:
+      - "9001:9001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:9001
+    env_file:
+      - osnovanie.service.env
+
 volumes:
   postgres_data:
   seq_data:

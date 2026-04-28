@@ -12,7 +12,14 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Starting web application");
+    
     var builder = WebApplication.CreateBuilder(args);
+    
+    string enviroment = builder.Environment.EnvironmentName;
+    
+    builder.Configuration.AddJsonFile($"appsettings.{enviroment}.json", true, true);
+
+    builder.Configuration.AddEnvironmentVariables();
 
     builder.Services.AddApiConfiguration(builder.Configuration);
 

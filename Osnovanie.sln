@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{BB979A7B-AAF4-4D72-BAA2-DC8D9FA70E68}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
+		docker-compose-dev.yml = docker-compose-dev.yml
+		src\Osnovanie.Api\Dockerfile = src\Osnovanie.Api\Dockerfile
+		osnovanie.service.env = osnovanie.service.env
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Osnovanie.Modules.Lavke", "src\Modules\Osnovanie.Modules.Lavke\Osnovanie.Modules.Lavke.csproj", "{4D062A2E-4BD6-4403-BC97-F54B69F1C755}"
