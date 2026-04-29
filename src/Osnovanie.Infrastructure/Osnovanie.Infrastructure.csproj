@@ -10,6 +10,15 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="CSharpFunctionalExtensions" />
+        <PackageReference Include="MailKit" />
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
     </ItemGroup>
     
     

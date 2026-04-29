@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.Auth.Contracts;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.Features;
 using Osnovanie.Modules.Auth.Infrastructure;
+using Osnovanie.Modules.Auth.Jwt;
 
 namespace Osnovanie.Modules.Auth.Configuration;
 
@@ -19,8 +21,15 @@ public static class AuthModule
 
         services.AddScoped<AuthDbContext>(_ =>
             new AuthDbContext(configuration.GetConnectionString("Database")!));
+        
+        services.Configure<JwtOptions>(
+            configuration.GetSection(JwtOptions.SECTION_NAME));
 
         services.AddScoped<RegisterUserHandler>();
+        services.AddScoped<VerifyEmailHandler>();
+        services.AddScoped<LoginHandler>();
+        
+        services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 
         services.AddValidatorsFromAssembly(typeof(AuthModule).Assembly);
 
@@ -32,7 +41,8 @@ public static class AuthModule
         });
 
         services.AddIdentity<User, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<AuthDbContext>();
+            .AddEntityFrameworkStores<AuthDbContext>()
+            .AddDefaultTokenProviders();
 
         return services;
     }

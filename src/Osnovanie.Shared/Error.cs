@@ -26,7 +26,7 @@ public record Error
     
     public static Error Conflict(string code, string message) => new(code, message, ErrorType.CONFLICT);
     
-    public static Error Authentification(string code, string message) => new(code, message, ErrorType.AUTHENTICATION);
+    public static Error Authentication(string code, string message) => new(code, message, ErrorType.AUTHENTICATION);
     
     public static Error Authorization(string code, string message) => new(code, message, ErrorType.AUTHORIZATION);
 

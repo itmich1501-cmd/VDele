@@ -1,6 +1,7 @@
 using System.Globalization;
 using Osnovanie.Api.Configuration;
 using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Infrastructure.Configuration;
 using Osnovanie.Modules.Auth.Configuration;
 using Serilog;
 
@@ -24,6 +25,8 @@ try
     builder.Services.AddApiConfiguration(builder.Configuration);
 
     builder.Services.AddAuthModule(builder.Configuration);
+    
+    builder.Services.AddInfrastructure(builder.Configuration);
     
     var app = builder.Build();
 
