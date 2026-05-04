@@ -3,10 +3,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
-using Osnovanie.Modules.Auth.Configuration;
 using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Modules.Auth.Validation;
@@ -26,9 +24,8 @@ public class VerifyPhoneCodeRequestValidator
 
         RuleFor(x => x.Code)
             .NotEmpty()
-            .Length(6)
             .Matches(@"^\d{6}$")
-            .WithMessage("Code must contain 6 digits");
+            .WithMessage("Code must contain exactly 6 digits");
     }
 }
 

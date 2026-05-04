@@ -4,4 +4,5 @@ public static class MaxLengths
 {
     public const int ApplicationCode = 50;
     public const int RoleCode = 50;
+    public const int PhoneCode = 6;
 }
