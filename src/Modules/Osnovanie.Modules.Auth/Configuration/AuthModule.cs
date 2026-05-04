@@ -5,12 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Infrastructure.DataBase;
 using Osnovanie.Modules.Auth.Contracts;
+using Osnovanie.Modules.Auth.Contracts.Persistence;
+using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.Features;
 using Osnovanie.Modules.Auth.Infrastructure;
 using Osnovanie.Modules.Auth.Infrastructure.Repositories;
 using Osnovanie.Modules.Auth.Jwt;
-using Osnovanie.Modules.Auth.Repositories;
 using Osnovanie.Shared.DataBase;
 
 namespace Osnovanie.Modules.Auth.Configuration;

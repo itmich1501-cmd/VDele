@@ -5,6 +5,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Osnovanie.Modules.Auth.Contracts;
+using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Shared;
 

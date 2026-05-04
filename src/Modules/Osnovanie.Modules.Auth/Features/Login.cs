@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Routing;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Contracts;
+using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Shared;

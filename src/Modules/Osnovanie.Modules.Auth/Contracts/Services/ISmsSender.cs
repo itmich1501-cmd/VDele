@@ -1,4 +1,4 @@
-namespace Osnovanie.Modules.Auth.Contracts;
+namespace Osnovanie.Modules.Auth.Contracts.Services;
 
 public interface ISmsSender
 {

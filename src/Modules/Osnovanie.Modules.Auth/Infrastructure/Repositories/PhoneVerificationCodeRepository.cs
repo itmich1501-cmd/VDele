@@ -1,9 +1,9 @@
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
-using Osnovanie.Modules.Auth.Repositories;
 using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.Auth.Infrastructure.Repositories;

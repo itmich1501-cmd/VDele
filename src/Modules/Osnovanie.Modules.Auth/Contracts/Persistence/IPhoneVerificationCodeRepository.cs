@@ -1,8 +1,6 @@
-using CSharpFunctionalExtensions;
 using Osnovanie.Modules.Auth.Domain;
-using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Repositories;
+namespace Osnovanie.Modules.Auth.Contracts.Persistence;
 
 public interface IPhoneVerificationCodeRepository
 {

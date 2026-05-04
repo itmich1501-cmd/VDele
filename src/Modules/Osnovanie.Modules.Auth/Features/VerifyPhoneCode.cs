@@ -7,8 +7,8 @@ using Microsoft.Extensions.Options;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Configuration;
+using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
-using Osnovanie.Modules.Auth.Repositories;
 using Osnovanie.Modules.Auth.Validation;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
@@ -68,7 +68,6 @@ public class VerifyPhoneCodeHandler
 
     public async Task<UnitResult<Errors>> Handle(VerifyPhoneCodeRequest request, CancellationToken cancellationToken)
     {
-            
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
