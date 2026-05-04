@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Osnovanie.Modules.Auth.Infrastructure;
@@ -11,9 +12,11 @@ using Osnovanie.Modules.Auth.Infrastructure;
 namespace Osnovanie.Modules.Auth.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260501103833_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,51 +156,6 @@ namespace Osnovanie.Modules.Auth.Migrations
                     b.ToTable("user_tokens", "auth");
                 });
 
-            modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.PhoneVerificationCodes", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("CodeHash")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("code_hash");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at_utc");
-
-                    b.Property<DateTime>("ExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expires_at_utc");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_used");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("phone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpiresAtUtc")
-                        .HasDatabaseName("ix_phone_verification_codes_expires_at_utc");
-
-                    b.HasIndex("Phone")
-                        .HasDatabaseName("ix_phone_verification_codes_phone");
-
-                    b.HasIndex("Phone", "CreatedAtUtc")
-                        .HasDatabaseName("ix_phone_verification_codes_phone_created_at");
-
-                    b.ToTable("phone_verification_codes", "auth");
-                });
-
             modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -263,7 +221,7 @@ namespace Osnovanie.Modules.Auth.Migrations
                     b.ToTable("users", "auth");
                 });
 
-            modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.UserAccesses", b =>
+            modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.UserAccess", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")

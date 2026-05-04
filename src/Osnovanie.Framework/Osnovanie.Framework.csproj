@@ -9,6 +9,8 @@
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions" />
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     </ItemGroup>
 
     <ItemGroup>

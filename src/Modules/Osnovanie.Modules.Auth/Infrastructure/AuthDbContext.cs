@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.Auth.Infrastructure.Configuration;
 
 namespace Osnovanie.Modules.Auth.Infrastructure;
 
@@ -25,31 +26,20 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
-        modelBuilder.Entity<User>()
-            .ToTable("users");
-        
-        modelBuilder.Entity<IdentityRole<Guid>>()
-            .ToTable("roles");
-
-        modelBuilder.Entity<IdentityUserClaim<Guid>>()
-            .ToTable("user_claims");
-
-        modelBuilder.Entity<IdentityUserToken<Guid>>()
-            .ToTable("user_tokens");
-
-        modelBuilder.Entity<IdentityUserLogin<Guid>>()
-            .ToTable("user_logins");
-
-        modelBuilder.Entity<IdentityRoleClaim<Guid>>()
-            .ToTable("role_claims");
-
-        modelBuilder.Entity<IdentityUserRole<Guid>>()
-            .ToTable("user_roles");
 
         modelBuilder.HasDefaultSchema("auth");
+        
+        IdentityConfiguration.ConfigureIdentity(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
     }
 
     private ILoggerFactory CreateLoggerFactory() =>
         LoggerFactory.Create(builder => { builder.AddConsole(); });
+    
+    public IQueryable<UserAccess> UserAccessesRead => Set<UserAccess>().AsQueryable().AsNoTracking();
+    public IQueryable<PhoneVerificationCode> PhoneVerificationCodesRead => Set<PhoneVerificationCode>().AsQueryable().AsNoTracking();
+    
+    public DbSet<UserAccess> UserAccesses => Set<UserAccess>();
+    public DbSet<PhoneVerificationCode> PhoneVerificationCodes => Set<PhoneVerificationCode>();
 }

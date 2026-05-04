@@ -31,6 +31,22 @@ namespace Osnovanie.Modules.Auth.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "user_access",
+                schema: "auth",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    application_code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    role_code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user_access", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users",
                 schema: "auth",
                 columns: table => new
@@ -187,6 +203,19 @@ namespace Osnovanie.Modules.Auth.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_user_access_user_id",
+                schema: "auth",
+                table: "user_access",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_access_user_id_application_code_role_code",
+                schema: "auth",
+                table: "user_access",
+                columns: new[] { "user_id", "application_code", "role_code" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_user_claims_UserId",
                 schema: "auth",
                 table: "user_claims",
@@ -223,6 +252,10 @@ namespace Osnovanie.Modules.Auth.Migrations
         {
             migrationBuilder.DropTable(
                 name: "role_claims",
+                schema: "auth");
+
+            migrationBuilder.DropTable(
+                name: "user_access",
                 schema: "auth");
 
             migrationBuilder.DropTable(

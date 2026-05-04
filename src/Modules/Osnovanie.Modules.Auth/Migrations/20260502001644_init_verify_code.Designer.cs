@@ -12,8 +12,8 @@ using Osnovanie.Modules.Auth.Infrastructure;
 namespace Osnovanie.Modules.Auth.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260427050154_Initial")]
-    partial class Initial
+    [Migration("20260502001644_init_verify_code")]
+    partial class init_verify_code
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,51 @@ namespace Osnovanie.Modules.Auth.Migrations
                     b.ToTable("user_tokens", "auth");
                 });
 
+            modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.PhoneVerificationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("code_hash");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at_utc");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_used");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiresAtUtc")
+                        .HasDatabaseName("ix_phone_verification_codes_expires_at_utc");
+
+                    b.HasIndex("Phone")
+                        .HasDatabaseName("ix_phone_verification_codes_phone");
+
+                    b.HasIndex("Phone", "CreatedAtUtc")
+                        .HasDatabaseName("ix_phone_verification_codes_phone_created_at");
+
+                    b.ToTable("phone_verification_codes", "auth");
+                });
+
             modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -219,6 +264,42 @@ namespace Osnovanie.Modules.Auth.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("users", "auth");
+                });
+
+            modelBuilder.Entity("Osnovanie.Modules.Auth.Domain.UserAccess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ApplicationCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("application_code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("RoleCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("role_code");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "ApplicationCode", "RoleCode")
+                        .IsUnique();
+
+                    b.ToTable("user_access", "auth");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
