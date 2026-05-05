@@ -1,8 +1,7 @@
 using Microsoft.Extensions.Logging;
-using Osnovanie.Modules.Auth.Contracts;
 using Osnovanie.Modules.Auth.Contracts.Services;
 
-namespace Osnovanie.Modules.Auth.Infrastructure;
+namespace Osnovanie.Infrastructure.Services.Auth;
 
 public sealed class FakeSmsSender : ISmsSender
 {

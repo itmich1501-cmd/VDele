@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Osnovanie.Modules.Auth.Domain;
 
-namespace Osnovanie.Modules.Auth.Infrastructure.Configuration;
+namespace Osnovanie.Infrastructure.Configurations.Auth;
 
 public class PhoneVerificationCodeConfiguration : IEntityTypeConfiguration<PhoneVerificationCode>
 {
     public void Configure(EntityTypeBuilder<PhoneVerificationCode> builder)
     {
-        builder.ToTable("phone_verification_codes");
+        builder.ToTable("phone_verification_codes", "auth");
 
         builder.HasKey(x => x.Id);
 

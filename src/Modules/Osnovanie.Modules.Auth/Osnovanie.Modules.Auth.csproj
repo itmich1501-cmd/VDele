@@ -31,7 +31,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Osnovanie.Framework\Osnovanie.Framework.csproj" />
-      <ProjectReference Include="..\..\Osnovanie.Infrastructure\Osnovanie.Infrastructure.csproj" />
       <ProjectReference Include="..\..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
     </ItemGroup>
 

@@ -5,7 +5,7 @@ using MimeKit;
 using Osnovanie.Shared;
 using Osnovanie.Shared.Email;
 
-namespace Osnovanie.Infrastructure.Email;
+namespace Osnovanie.Infrastructure.Services.Email;
 
 public class EmailSender : IEmailSender
 {

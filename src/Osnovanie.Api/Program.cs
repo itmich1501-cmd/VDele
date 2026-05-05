@@ -1,7 +1,8 @@
 using System.Globalization;
 using Osnovanie.Api.Configuration;
 using Osnovanie.Framework.EndpointSettings;
-using Osnovanie.Infrastructure.Configuration;
+using Osnovanie.Infrastructure;
+using Osnovanie.Infrastructure.Configurations;
 using Osnovanie.Modules.Auth.Configuration;
 using Serilog;
 

@@ -2,16 +2,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Osnovanie.Infrastructure.Configurations.Auth;
 using Osnovanie.Modules.Auth.Domain;
-using Osnovanie.Modules.Auth.Infrastructure.Configuration;
+using Osnovanie.Modules.ReferenceData.Cities.Domain;
 
-namespace Osnovanie.Modules.Auth.Infrastructure;
+namespace Osnovanie.Infrastructure.Database;
 
-public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public readonly string _connectionString;
     
-    public AuthDbContext(string connectionString)
+    public AppDbContext(string connectionString)
     {
         _connectionString = connectionString;
     }
@@ -26,12 +27,10 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.HasDefaultSchema("auth");
         
         IdentityConfiguration.ConfigureIdentity(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 
     private ILoggerFactory CreateLoggerFactory() =>
@@ -39,7 +38,9 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     
     public IQueryable<UserAccess> UserAccessesRead => Set<UserAccess>().AsQueryable().AsNoTracking();
     public IQueryable<PhoneVerificationCode> PhoneVerificationCodesRead => Set<PhoneVerificationCode>().AsQueryable().AsNoTracking();
+    public IQueryable<City> CitiesRead => Set<City>().AsQueryable().AsNoTracking();
     
     public DbSet<UserAccess> UserAccesses => Set<UserAccess>();
     public DbSet<PhoneVerificationCode> PhoneVerificationCodes => Set<PhoneVerificationCode>();
+    public DbSet<City> Cities => Set<City>();
 }

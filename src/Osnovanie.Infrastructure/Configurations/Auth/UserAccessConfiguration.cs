@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.Domain.Constants;
 
-namespace Osnovanie.Modules.Auth.Infrastructure.Configuration;
+namespace Osnovanie.Infrastructure.Configurations.Auth;
 
 public class UserAccessConfiguration : IEntityTypeConfiguration<UserAccess>
 {
     public void Configure(EntityTypeBuilder<UserAccess> builder)
     {
-        builder.ToTable("user_access");
+        builder.ToTable("user_access", "auth");
 
         builder.HasKey(x => x.Id);
 

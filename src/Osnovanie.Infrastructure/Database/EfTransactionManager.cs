@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
 
-namespace Osnovanie.Infrastructure.DataBase;
+namespace Osnovanie.Infrastructure.Database;
 
 public class EfTransactionManager<TDbContext> : ITransactionManager
     where TDbContext : DbContext

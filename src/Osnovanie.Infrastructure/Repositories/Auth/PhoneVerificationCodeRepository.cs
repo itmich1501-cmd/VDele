@@ -1,19 +1,17 @@
-using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Osnovanie.Infrastructure.Database;
 using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Domain;
-using Osnovanie.Modules.Auth.ErrorDefinitions;
-using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Infrastructure.Repositories;
+namespace Osnovanie.Infrastructure.Repositories.Auth;
 
 public class PhoneVerificationCodeRepository : IPhoneVerificationCodeRepository
 {
-    private readonly AuthDbContext _dbContext;
+    private readonly AppDbContext _dbContext;
     private readonly ILogger<PhoneVerificationCodeRepository> _logger;
 
-    public PhoneVerificationCodeRepository(AuthDbContext dbContext, ILogger<PhoneVerificationCodeRepository> logger)
+    public PhoneVerificationCodeRepository(AppDbContext dbContext, ILogger<PhoneVerificationCodeRepository> logger)
     {
         _dbContext = dbContext;
         _logger = logger;

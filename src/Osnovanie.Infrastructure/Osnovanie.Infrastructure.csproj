@@ -18,7 +18,13 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\Modules\Osnovanie.Modules.Auth\Osnovanie.Modules.Auth.csproj" />
+      <ProjectReference Include="..\Modules\Osnovanie.Modules.ReferenceData\Osnovanie.Modules.ReferenceData.csproj" />
       <ProjectReference Include="..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Repositories\ReferenceData\" />
     </ItemGroup>
     
     
