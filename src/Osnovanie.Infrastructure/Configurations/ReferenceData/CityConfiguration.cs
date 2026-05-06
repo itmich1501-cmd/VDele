@@ -48,5 +48,25 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
         builder.HasIndex(x => x.SortOrder);
         builder.HasIndex(x => x.FiasId);
         builder.HasIndex(x => x.Oktmo);
+        
+        var yakutsk = City.Create(
+            Guid.Parse("33333333-3333-3333-3333-333333333333"),
+            "Якутск",
+            "Республика Саха (Якутия)",
+            "Asia/Yakutsk",
+            fiasId: "d0e68d1f-0f0c-4f7d-9c87-68c4b2c2c6a1",
+            oktmo: "98701000",
+            sortOrder: 3).Value;
+
+        var vladivostok = City.Create(
+            Guid.Parse("44444444-4444-4444-4444-444444444444"),
+            "Владивосток",
+            "Приморский край",
+            "Asia/Vladivostok",
+            fiasId: "1b8a7d3d-2b9f-4c1f-8f2a-1c5f6c7a9e2b",
+            oktmo: "05701000",
+            sortOrder: 4).Value;
+
+        builder.HasData(yakutsk, vladivostok);
     }
 }

@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.Auth.Configuration;
 using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Features;
 using Osnovanie.Modules.Auth.Jwt;
 
-namespace Osnovanie.Modules.Auth.Configuration;
+namespace Osnovanie.Modules.Auth;
 
 public static class AuthModule
 {
@@ -16,8 +17,6 @@ public static class AuthModule
         IConfiguration configuration)
     {
         services.AddEndpoints(typeof(AuthModule).Assembly);
-
-        
         
         services.Configure<JwtOptions>(
             configuration.GetSection(JwtOptions.SECTION_NAME));

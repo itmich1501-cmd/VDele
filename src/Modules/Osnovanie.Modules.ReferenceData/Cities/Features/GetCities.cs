@@ -31,17 +31,17 @@ public class GetCities : IEndpoint
 
 public class GetCitiesHandler
 {
-    private readonly IReadDbConnection _readDbConnection;
+    private readonly IReferenceDataReadDbContext _referenceDataReadDbContext;
 
-    public GetCitiesHandler(IReadDbConnection readDbConnection)
+    public GetCitiesHandler(IReferenceDataReadDbContext referenceDataReadDbContext)
     {
-        _readDbConnection = readDbConnection;
+        _referenceDataReadDbContext = referenceDataReadDbContext;
     }
 
     public async Task<Result<IReadOnlyList<CityResponse>, Errors>> Handle(
         CancellationToken cancellationToken)
     {
-        var cities = await _readDbConnection.CitiesRead
+        var cities = await _referenceDataReadDbContext.CitiesRead
             .Where(c => c.IsVisible)
             .OrderBy(c => c.SortOrder)
             .ThenBy(c => c.Name)

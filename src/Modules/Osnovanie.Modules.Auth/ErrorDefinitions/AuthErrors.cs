@@ -31,6 +31,21 @@ public static class AuthErrors
         Error.Validation("auth.role.empty", 
             "RoleCode is empty");
     
+    public static Error UserAlreadyExists() =>
+        Error.Conflict(
+            "auth.user.already_exists",
+            "User with this phone already exists");
+    
+    public static Error PhoneAlreadyConfirmed() =>
+        Error.Validation(
+            "auth.phone.already_confirmed",
+            "Phone already confirmed");
+    
+    public static Error RegistrationFailed() =>
+        Error.Failure(
+            "auth.registration.failed",
+            "User registration failed");
+    
     public static class PhoneVerificationCode
     {
         public static Error PhoneRequired() =>

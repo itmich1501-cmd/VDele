@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Infrastructure.Database;
@@ -8,6 +9,7 @@ using Osnovanie.Infrastructure.Services.Email;
 using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.ReferenceData.DataBase;
 using Osnovanie.Shared.DataBase;
 using Osnovanie.Shared.Email;
 
@@ -19,8 +21,15 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<AppDbContext>(_ =>
-            new AppDbContext(configuration.GetConnectionString("Database")!));
+
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("Database"));
+            options.EnableSensitiveDataLogging();
+        });
+        
+        services.AddScoped<IReferenceDataReadDbContext>(
+            sp => sp.GetRequiredService<AppDbContext>());
         
         services.Configure<MailOptions>(
             configuration.GetSection(MailOptions.SECTION_NAME));

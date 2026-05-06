@@ -3,7 +3,9 @@ using Osnovanie.Api.Configuration;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Infrastructure;
 using Osnovanie.Infrastructure.Configurations;
+using Osnovanie.Modules.Auth;
 using Osnovanie.Modules.Auth.Configuration;
+using Osnovanie.Modules.ReferenceData;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -26,6 +28,7 @@ try
     builder.Services.AddApiConfiguration(builder.Configuration);
 
     builder.Services.AddAuthModule(builder.Configuration);
+    builder.Services.AddReferenceDataModule();
     
     builder.Services.AddInfrastructure(builder.Configuration);
     
