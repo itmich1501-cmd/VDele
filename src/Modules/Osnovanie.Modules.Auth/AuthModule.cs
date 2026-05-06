@@ -7,6 +7,7 @@ using Osnovanie.Modules.Auth.Configuration;
 using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Features;
 using Osnovanie.Modules.Auth.Jwt;
+using Osnovanie.Modules.Auth.Services;
 
 namespace Osnovanie.Modules.Auth;
 
@@ -29,7 +30,12 @@ public static class AuthModule
         services.AddScoped<LoginHandler>();
         services.AddScoped<SendPhoneCodeHandler>();
         services.AddScoped<VerifyPhoneCodeHandler>();
-        services.AddScoped<RegisterByPhoneHandler>();
+        
+        services.AddScoped<RegisterVDeleCustomerByPhoneHandler>();
+        services.AddScoped<RegisterVDeleSpecialistByPhoneHandler>();
+        services.AddScoped<RegisterVLavkeCustomerByPhoneHandler>();
+        services.AddScoped<RegisterVLavkeSellerByPhoneHandler>();
+        services.AddScoped<PhoneRegistrationService>();
         
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
         

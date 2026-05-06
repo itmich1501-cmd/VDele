@@ -15,7 +15,8 @@ public sealed record PhoneRegistrationCommand(
     string Password,
     string FirstName,
     string ApplicationCode,
-    string RoleCode);
+    string RoleCode,
+    Guid CityId);
 
 public sealed class PhoneRegistrationService
 {
@@ -70,7 +71,7 @@ public sealed class PhoneRegistrationService
             NormalizedUserName = command.Phone.ToUpperInvariant(),
             PhoneNumber = command.Phone,
             PhoneNumberConfirmed = true,
-            FirstName = command.FirstName.Trim()
+            FirstName = command.FirstName.Trim(),
         };
 
         var createUserResult = await _userManager.CreateAsync(user, command.Password);
