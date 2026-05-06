@@ -29,6 +29,7 @@ public static class AuthModule
         services.AddScoped<LoginHandler>();
         services.AddScoped<SendPhoneCodeHandler>();
         services.AddScoped<VerifyPhoneCodeHandler>();
+        services.AddScoped<RegisterByPhoneHandler>();
         
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
         

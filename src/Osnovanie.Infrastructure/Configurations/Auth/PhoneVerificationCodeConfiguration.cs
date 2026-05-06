@@ -33,6 +33,16 @@ public class PhoneVerificationCodeConfiguration : IEntityTypeConfiguration<Phone
             .HasColumnName("is_used")
             .IsRequired();
 
+        builder.Property(x => x.UsedAtUtc)
+            .HasColumnName("used_at_utc");
+
+        builder.Property(x => x.IsConfirmed)
+            .HasColumnName("is_confirmed")
+            .IsRequired();
+
+        builder.Property(x => x.ConfirmedAtUtc)
+            .HasColumnName("confirmed_at_utc");
+
         builder.Property(x => x.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired();

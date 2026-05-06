@@ -35,7 +35,7 @@ public class RegisterUserRequestValidator : AbstractValidator<RegisterUserReques
     }
 }
 
-public class CreateEndpoint : IEndpoint
+public class RegisterEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {

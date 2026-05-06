@@ -18,9 +18,15 @@ public class PhoneVerificationCode
 
     public bool IsUsed { get; private set; }
 
+    public DateTime? UsedAtUtc { get; private set; }
+
+    public bool IsConfirmed { get; private set; }
+
+    public DateTime? ConfirmedAtUtc { get; private set; }
+
     public DateTime CreatedAtUtc { get; private set; }
 
-    private PhoneVerificationCode() { } // EF
+    private PhoneVerificationCode() { }
 
     private PhoneVerificationCode(
         string phone,
@@ -33,9 +39,9 @@ public class PhoneVerificationCode
         ExpiresAtUtc = expiresAtUtc;
         CreatedAtUtc = DateTime.UtcNow;
         IsUsed = false;
+        IsConfirmed = false;
     }
 
-    // Factory
     public static Result<(PhoneVerificationCode Entity, string Code), Error> Create(
         string phone,
         TimeSpan lifetime)
@@ -57,7 +63,6 @@ public class PhoneVerificationCode
         return (entity, code);
     }
 
-    // Проверка кода
     public UnitResult<Error> Verify(string code)
     {
         if (IsUsed)
@@ -74,20 +79,35 @@ public class PhoneVerificationCode
         return UnitResult.Success<Error>();
     }
 
-    // Подтверждение
-    public UnitResult<Error> MarkAsUsed()
+    public UnitResult<Error> Confirm(string code)
     {
-        if (IsUsed)
-        {
-            return AuthErrors.PhoneVerificationCode.AlreadyUsed();
-        }
+        if (IsConfirmed)
+            return UnitResult.Success<Error>();
 
-        IsUsed = true;
-        
+        var verifyResult = Verify(code);
+
+        if (verifyResult.IsFailure)
+            return verifyResult.Error;
+
+        IsConfirmed = true;
+        ConfirmedAtUtc = DateTime.UtcNow;
+
         return UnitResult.Success<Error>();
     }
 
-    // ===== Helpers =====
+    public UnitResult<Error> MarkAsUsed()
+    {
+        if (!IsConfirmed)
+            return AuthErrors.PhoneVerificationCode.NotConfirmed();
+
+        if (IsUsed)
+            return AuthErrors.PhoneVerificationCode.AlreadyUsed();
+
+        IsUsed = true;
+        UsedAtUtc = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
 
     private static string GenerateCode()
     {

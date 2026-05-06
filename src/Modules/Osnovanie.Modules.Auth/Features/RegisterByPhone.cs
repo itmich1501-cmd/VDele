@@ -2,12 +2,14 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Modules.Auth.Validation;
@@ -21,9 +23,7 @@ namespace Osnovanie.Modules.Auth.Features;
 public record RegisterByPhoneRequest(
     string Phone,
     string Password,
-    string FirstName,
-    string ApplicationCode,
-    string RoleCode);
+    string FirstName);
 
 public class RegisterByPhoneRequestValidator : AbstractValidator<RegisterByPhoneRequest>
 {
@@ -45,24 +45,16 @@ public class RegisterByPhoneRequestValidator : AbstractValidator<RegisterByPhone
             .WithError(Error.Validation("auth.firstname.empty", "Имя обязательно", "firstName"))
             .MaximumLength(50)
             .WithError(Error.Validation("auth.firstname.too_long", "Максимум 50 символов", "firstName"));
-
-        RuleFor(x => x.ApplicationCode)
-            .NotEmpty()
-            .WithError(Error.Validation("auth.application.empty", "Код приложения обязателен", "applicationCode"));
-
-        RuleFor(x => x.RoleCode)
-            .NotEmpty()
-            .WithError(Error.Validation("auth.role.empty", "Роль обязательна", "roleCode"));
     }
 }
 
-public class CreateEndpoint : IEndpoint
+public class RegisterByPhoneEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("auth/phone/register", async (
             RegisterByPhoneHandler handler,
-            RegisterByPhoneRequest request,
+            [FromBody] RegisterByPhoneRequest request,
             CancellationToken cancellationToken
             ) =>
         {
@@ -76,66 +68,74 @@ public class CreateEndpoint : IEndpoint
 public sealed class RegisterByPhoneHandler
 {
     private readonly UserManager<User> _userManager;
-    private readonly IEmailSender _emailSender;
     private readonly IValidator<RegisterByPhoneRequest> _validator;
-    private readonly ILogger<RegisterByPhoneHandler> _logger;
+    private readonly IPhoneVerificationCodeRepository _phoneCodeRepository;
+    private readonly IUserAccessRepository _userAccessRepository;
     private readonly ITransactionManager _transactionManager;
+    private readonly ILogger<RegisterByPhoneHandler> _logger;
 
     public RegisterByPhoneHandler(
         UserManager<User> userManager,
-        IEmailSender  emailSender,
         IValidator<RegisterByPhoneRequest> validator,
-        ILogger<RegisterByPhoneHandler> logger, 
-        ITransactionManager transactionManager) 
+        IPhoneVerificationCodeRepository phoneCodeRepository,
+        IUserAccessRepository userAccessRepository,
+        ITransactionManager transactionManager,
+        ILogger<RegisterByPhoneHandler> logger)
     {
         _userManager = userManager;
-        _emailSender = emailSender;
         _validator = validator;
-        _logger = logger;
+        _phoneCodeRepository = phoneCodeRepository;
+        _userAccessRepository = userAccessRepository;
         _transactionManager = transactionManager;
+        _logger = logger;
     }
-    
-    public async Task<Result<Guid, Error>> Handle(
-        RegisterByPhoneRequest request,
+
+    public async Task<Result<Guid, Errors>> Handle(
+        RegisterByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
+        if (request is null)
+            return Error.Validation(
+                "auth.register.request.empty",
+                "Тело запроса обязательно",
+                "request").ToErrors();
+
+        var validationResult = await _validator.ValidateAsync(
+            request,
+            cancellationToken);
+
+        if (!validationResult.IsValid)
+            return validationResult.ToErrors();
+
         var existingUser = await _userManager.Users
             .FirstOrDefaultAsync(x => x.PhoneNumber == request.Phone, cancellationToken);
 
         if (existingUser is not null)
-            return AuthErrors.UserAlreadyExists();
+            return AuthErrors.UserAlreadyExists().ToErrors();
 
-        var verificationCodeResult = await _codeRepository.GetActiveCode(
+        var verificationCode = await _phoneCodeRepository.GetLatestConfirmedByPhone(
             request.Phone,
-            request.Code,
             cancellationToken);
 
-        if (verificationCodeResult.IsFailure)
-            return verificationCodeResult.Error;
+        if (verificationCode is null)
+            return AuthErrors.PhoneVerificationCode.NotConfirmed().ToErrors();
 
-        var verificationCode = verificationCodeResult.Value;
+        var transactionResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
 
-        if (verificationCode.IsExpired())
-            return AuthErrors.PhoneVerificationCode.Expired();
+        if (transactionResult.IsFailure)
+            return transactionResult.Error!.ToErrors();
 
-        verificationCode.MarkAsUsed();
+        await using var transaction = transactionResult.Value!;
 
         var user = new User
         {
             Id = Guid.NewGuid(),
             UserName = request.Phone,
+            NormalizedUserName = request.Phone.ToUpperInvariant(),
+            FirstName = request.FirstName.Trim(),
             PhoneNumber = request.Phone,
-            PhoneNumberConfirmed = true,
-            NormalizedUserName = request.FirstName
+            PhoneNumberConfirmed = true
         };
-
-        var transactionScopeResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
-        if (transactionScopeResult.IsFailure)
-        {
-            return transactionScopeResult.Error;
-        }
-
-        await using var transactionScope = transactionScopeResult.Value;
 
         var createUserResult = await _userManager.CreateAsync(user, request.Password);
 
@@ -143,26 +143,49 @@ public sealed class RegisterByPhoneHandler
         {
             await transaction.RollbackAsync(cancellationToken);
 
-            return Errors.Auth.InvalidCredentials();
+            _logger.LogWarning(
+                "Failed to register user by phone {Phone}. Errors: {Errors}",
+                request.Phone,
+                string.Join(", ", createUserResult.Errors.Select(x => x.Description)));
+
+            return AuthErrors.RegistrationFailed().ToErrors();
         }
 
-        var userAccess = UserAccess.Create(
+        var userAccessResult = UserAccess.Create(
             user.Id,
-            ApplicationCodes.Vdele,
-            RoleCodes.Customer);
+            request.ApplicationCode,
+            request.RoleCode);
 
-        if (userAccess.IsFailure)
+        if (userAccessResult.IsFailure)
         {
             await transaction.RollbackAsync(cancellationToken);
-
-            return userAccess.Error;
+            return userAccessResult.Error!.ToErrors();
         }
 
-        await _userAccessRepository.Add(userAccess.Value, cancellationToken);
+        await _userAccessRepository.Add(
+            userAccessResult.Value!,
+            cancellationToken);
 
-        await _transactionManager.SaveChangesAsync(cancellationToken);
+        var markAsUsedResult = verificationCode.MarkAsUsed();
 
-        await transaction.CommitAsync(cancellationToken);
+        if (markAsUsedResult.IsFailure)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return markAsUsedResult.Error!.ToErrors();
+        }
+
+        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+        if (saveResult.IsFailure)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return saveResult.Error!.ToErrors();
+        }
+
+        var commitResult = await transaction.CommitAsync(cancellationToken);
+
+        if (commitResult.IsFailure)
+            return commitResult.Error!.ToErrors();
 
         return user.Id;
     }

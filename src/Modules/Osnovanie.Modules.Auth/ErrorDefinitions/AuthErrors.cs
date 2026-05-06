@@ -48,6 +48,11 @@ public static class AuthErrors
     
     public static class PhoneVerificationCode
     {
+        public static Error NotConfirmed() =>
+            Error.Validation(
+                "auth.phone_verification_code.not_confirmed",
+                "Код подтверждения ещё не подтверждён.");
+        
         public static Error PhoneRequired() =>
             Error.Validation(
                 "auth.phone_code.phone_required",

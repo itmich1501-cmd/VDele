@@ -26,11 +26,30 @@ public class PhoneVerificationCodeRepository : IPhoneVerificationCodeRepository
         return phoneVerificationCode.Id;
     }
 
-    public async Task<PhoneVerificationCode?> GetLatestActiveByPhone(string phone, CancellationToken ct)
+    public async Task<PhoneVerificationCode?> GetLatestActiveByPhone(
+        string phone,
+        CancellationToken ct)
     {
         return await _dbContext.PhoneVerificationCodes
-            .Where(x => x.Phone == phone && !x.IsUsed)
+            .Where(x =>
+                x.Phone == phone &&
+                !x.IsUsed &&
+                x.ExpiresAtUtc > DateTime.UtcNow)
             .OrderByDescending(x => x.CreatedAtUtc)
-            .FirstOrDefaultAsync(ct);   
+            .FirstOrDefaultAsync(ct);
+    }
+    
+    public async Task<PhoneVerificationCode?> GetLatestConfirmedByPhone(
+        string phone,
+        CancellationToken ct)
+    {
+        return await _dbContext.PhoneVerificationCodes
+            .Where(x =>
+                x.Phone == phone &&
+                x.IsConfirmed &&
+                !x.IsUsed &&
+                x.ExpiresAtUtc > DateTime.UtcNow)
+            .OrderByDescending(x => x.CreatedAtUtc)
+            .FirstOrDefaultAsync(ct);
     }
 }

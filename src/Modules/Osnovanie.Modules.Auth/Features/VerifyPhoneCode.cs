@@ -63,13 +63,15 @@ public class VerifyPhoneCodeHandler
         _logger = logger;
     }
 
-    public async Task<UnitResult<Errors>> Handle(VerifyPhoneCodeRequest request, CancellationToken cancellationToken)
+    public async Task<UnitResult<Errors>> Handle(
+        VerifyPhoneCodeRequest request,
+        CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             return validationResult.ToErrors();
-            
+
         var verificationCode = await _repository.GetLatestActiveByPhone(
             request.Phone,
             cancellationToken);
@@ -77,16 +79,10 @@ public class VerifyPhoneCodeHandler
         if (verificationCode is null)
             return AuthErrors.PhoneVerificationCode.NotFound().ToErrors();
 
-        var verifyResult = verificationCode.Verify(request.Code);
-        if (verifyResult.IsFailure)
-        {
-            return verifyResult.Error.ToErrors();
-        }
-            
-        var markResult = verificationCode.MarkAsUsed();
+        var confirmResult = verificationCode.Confirm(request.Code);
 
-        if (markResult.IsFailure)
-            return markResult.Error.ToErrors();
+        if (confirmResult.IsFailure)
+            return confirmResult.Error.ToErrors();
 
         var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
 
