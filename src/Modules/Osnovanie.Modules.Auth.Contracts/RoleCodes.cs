@@ -1,4 +1,4 @@
-namespace Osnovanie.Modules.Auth.Domain.Constants;
+namespace Osnovanie.Modules.Auth.Contracts;
 
 public static class RoleCodes
 {

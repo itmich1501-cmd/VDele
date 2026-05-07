@@ -12,6 +12,7 @@ using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Shared.Email;
 using Osnovanie.Shared.Extensions;
+using Osnovanie.Shared.Validation;
 
 namespace Osnovanie.Modules.Auth.Features;
 

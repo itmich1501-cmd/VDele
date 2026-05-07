@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Osnovanie.Shared;
+using Osnovanie.Shared.Validation;
 
 namespace Osnovanie.Modules.VDele.Specialists.Features;
 

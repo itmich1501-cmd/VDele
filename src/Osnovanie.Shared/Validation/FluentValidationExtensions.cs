@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Osnovanie.Shared;
+namespace Osnovanie.Shared.Validation;
 
 public static class FluentValidationExtensions
 {
@@ -10,8 +10,8 @@ public static class FluentValidationExtensions
         Error error)
     {
         return rule
-            .WithErrorCode(error.Code)
-            .WithMessage(error.Message);
+            .WithErrorCode(error.Code)!
+            .WithMessage(error.Message)!;
     }
     
     public static Errors ToErrors(this ValidationResult validationResult) =>

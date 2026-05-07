@@ -13,6 +13,7 @@ using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.Validation;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
+using Osnovanie.Shared.Validation;
 
 namespace Osnovanie.Modules.Auth.Features;
 

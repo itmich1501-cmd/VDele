@@ -8,8 +8,10 @@ using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.VDele.Customers.Contracts;
 using Osnovanie.Modules.VDele.Customers.Domain;
+using Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
+using Osnovanie.Shared.Validation;
 
 namespace Osnovanie.Modules.VDele.Customers.Features;
 
@@ -27,26 +29,28 @@ public sealed class RegisterCustomerByPhoneValidator
     {
         RuleFor(x => x.Phone)
             .NotEmpty()
-            .WithMessage("Телефон обязателен");
+            .WithError(CustomerRequestErrors.PhoneIsEmpty());
 
         RuleFor(x => x.Password)
             .NotEmpty()
+            .WithError(CustomerRequestErrors.PasswordIsEmpty())
             .MinimumLength(6)
-            .WithMessage("Пароль должен содержать минимум 6 символов");
+            .WithError(CustomerRequestErrors.PasswordIsTooShort());
 
         RuleFor(x => x.FullName)
             .NotEmpty()
+            .WithError(CustomerRequestErrors.FullNameIsEmpty())
             .MaximumLength(200)
-            .WithMessage("ФИО обязательно");
+            .WithError(CustomerRequestErrors.FullNameIsTooLong());
 
         RuleFor(x => x.CityId)
             .NotEmpty()
-            .WithMessage("Город обязателен");
+            .WithError(CustomerRequestErrors.CityIdIsEmpty());
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .When(x => !string.IsNullOrWhiteSpace(x.Email))
-            .WithMessage("Email имеет неверный формат");
+            .WithError(CustomerRequestErrors.EmailIsInvalid());
     }
 }
 
@@ -70,6 +74,7 @@ public sealed class RegisterCustomerByPhoneHandler
 {
     private readonly IAuthRegistrationService _authRegistrationService;
     private readonly ICustomerProfileRepository _profileRepository;
+    private readonly ICustomersReadDbContext _customersReadDbContext;
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<RegisterCustomerByPhoneRequest> _validator;
     private readonly ILogger<RegisterCustomerByPhoneHandler> _logger;
@@ -77,18 +82,20 @@ public sealed class RegisterCustomerByPhoneHandler
     public RegisterCustomerByPhoneHandler(
         IAuthRegistrationService authRegistrationService,
         ICustomerProfileRepository profileRepository,
+        ICustomersReadDbContext customersReadDbContext,
         ITransactionManager transactionManager,
         IValidator<RegisterCustomerByPhoneRequest> validator,
         ILogger<RegisterCustomerByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
         _profileRepository = profileRepository;
+        _customersReadDbContext = customersReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> Handle(
+     public async Task<Result<Guid, Errors>> Handle(
         RegisterCustomerByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
@@ -132,9 +139,8 @@ public sealed class RegisterCustomerByPhoneHandler
 
         var userId = authResult.Value;
 
-        var profileExists = await _profileRepository.ExistsByUserId(
-            userId,
-            cancellationToken);
+        var profileExists = await _customersReadDbContext.CustomerProfilesRead
+            .AnyAsync(x => x.UserId == userId, cancellationToken);
 
         if (profileExists)
         {
