@@ -1,22 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Osnovanie.Framework.EndpointResult;
-using Osnovanie.Framework.EndpointSettings;
-using Osnovanie.Modules.Auth.Domain.Constants;
-using Osnovanie.Modules.Auth.Services;
-using Osnovanie.Modules.Auth.Validation;
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Features;
+namespace Osnovanie.Modules.VDele.Specialists.Features;
 
 public record RegisterVDeleSpecialistByPhoneRequest(
     string Phone,
     string Password,
     string FirstName,
-    Guid CityId);
+    Guid CityId,
+    string? Email);
 
 public sealed class RegisterVDeleSpecialistByPhoneValidator
     : AbstractValidator<RegisterVDeleSpecialistByPhoneRequest>

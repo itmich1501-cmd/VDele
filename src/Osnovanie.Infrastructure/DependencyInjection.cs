@@ -40,6 +40,9 @@ public static class DependencyInjection
         services.AddScoped<ITransactionManager, EfTransactionManager<AppDbContext>>();
         services.AddScoped<IPhoneVerificationCodeRepository, PhoneVerificationCodeRepository>();
         services.AddScoped<IUserAccessRepository, UserAccessRepository>();
+        services.AddScoped<IVDeleCustomerProfileRepository, VDeleCustomerProfileRepository>();
+        services.AddScoped<IVDeleSpecialistProfileRepository, VDeleSpecialistProfileRepository>();
+        services.AddScoped<IVLavkeSellerProfileRepository, VLavkeSellerProfileRepository>();
         
         services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()

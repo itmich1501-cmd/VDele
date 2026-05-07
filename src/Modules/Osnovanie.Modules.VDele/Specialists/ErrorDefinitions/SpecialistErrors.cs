@@ -1,6 +1,6 @@
-﻿using Osnovanie.Shared;
+using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.ErrorDefinitions;
+namespace Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
 
 public static class SpecialistErrors
 {

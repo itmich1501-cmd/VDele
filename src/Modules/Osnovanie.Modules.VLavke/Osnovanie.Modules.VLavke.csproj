@@ -7,8 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Osnovanie.Framework\Osnovanie.Framework.csproj" />
       <ProjectReference Include="..\..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Sellers\Domain\" />
+      <Folder Include="Sellers\Features\" />
     </ItemGroup>
 
 </Project>

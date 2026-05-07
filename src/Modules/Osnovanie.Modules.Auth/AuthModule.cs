@@ -45,7 +45,7 @@ public static class AuthModule
         {
             options.Password.RequireDigit = false;
             options.Password.RequireNonAlphanumeric = false;
-            options.User.RequireUniqueEmail = true;
+            options.User.RequireUniqueEmail = false;
         });
 
         return services;

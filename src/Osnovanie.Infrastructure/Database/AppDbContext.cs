@@ -39,4 +39,8 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, O
     public DbSet<UserAccess> UserAccesses => Set<UserAccess>();
     public DbSet<PhoneVerificationCode> PhoneVerificationCodes => Set<PhoneVerificationCode>();
     public DbSet<City> Cities => Set<City>();
+
+    public DbSet<VDeleCustomerProfile> VDeleCustomerProfiles => Set<VDeleCustomerProfile>();
+    public DbSet<VDeleSpecialistProfile> VDeleSpecialistProfiles => Set<VDeleSpecialistProfile>();
+    public DbSet<VLavkeSellerProfile> VLavkeSellerProfiles => Set<VLavkeSellerProfile>();
 }

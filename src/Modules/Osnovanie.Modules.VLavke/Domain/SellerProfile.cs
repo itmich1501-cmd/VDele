@@ -4,7 +4,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.Auth.Domain;
 
-public sealed class VLavkeSellerProfile
+public sealed class SellerProfile
 {
     public Guid Id { get; private set; }
 
@@ -24,11 +24,11 @@ public sealed class VLavkeSellerProfile
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private VLavkeSellerProfile()
+    private SellerProfile()
     {
     }
 
-    private VLavkeSellerProfile(
+    private SellerProfile(
         Guid userId,
         string fullName,
         Guid mainCityId,
@@ -42,7 +42,7 @@ public sealed class VLavkeSellerProfile
         CreatedAt = DateTime.UtcNow;
     }
 
-    public static Result<VLavkeSellerProfile, Error> Create(
+    public static Result<SellerProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid mainCityId,
@@ -57,7 +57,7 @@ public sealed class VLavkeSellerProfile
         if (mainCityId == Guid.Empty)
             return SellerErrors.MainCityIdIsEmpty();
 
-        return new VLavkeSellerProfile(
+        return new SellerProfile(
             userId,
             fullName.Trim(),
             mainCityId,

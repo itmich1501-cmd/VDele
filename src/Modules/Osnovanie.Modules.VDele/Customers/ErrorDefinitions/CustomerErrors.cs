@@ -1,6 +1,6 @@
-﻿using Osnovanie.Shared;
+using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.ErrorDefinitions;
+namespace Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
 
 public static class CustomerErrors
 {
@@ -21,4 +21,9 @@ public static class CustomerErrors
             "vdele.customer.city_id.empty",
             "Город обязателен",
             "cityId");
+
+    public static Error AlreadyExists(Guid userId) =>
+        Error.Conflict(
+            "vdele.customer.already_exists",
+            $"Профиль заказчика для пользователя {userId} уже существует");
 }

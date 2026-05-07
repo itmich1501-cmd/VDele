@@ -16,7 +16,8 @@ public record RegisterVLavkeCustomerByPhoneRequest(
     string Phone,
     string Password,
     string FirstName,
-    Guid CityId);
+    Guid CityId,
+    string? Email);
 
 public sealed class RegisterVLavkeCustomerByPhoneValidator
     : AbstractValidator<RegisterVLavkeCustomerByPhoneRequest>

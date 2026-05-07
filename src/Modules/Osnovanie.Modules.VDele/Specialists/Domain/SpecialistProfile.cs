@@ -1,10 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Domain;
+namespace Osnovanie.Modules.VDele.Specialists.Domain;
 
-public sealed class VDeleCustomerProfile
+public sealed class SpecialistProfile
 {
     public Guid Id { get; private set; }
 
@@ -16,15 +15,17 @@ public sealed class VDeleCustomerProfile
 
     public string? Email { get; private set; }
 
+    public string? About { get; private set; }
+
     public DateTime CreatedAt { get; private set; }
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private VDeleCustomerProfile()
+    private SpecialistProfile()
     {
     }
 
-    private VDeleCustomerProfile(
+    private SpecialistProfile(
         Guid userId,
         string fullName,
         Guid cityId,
@@ -38,22 +39,22 @@ public sealed class VDeleCustomerProfile
         CreatedAt = DateTime.UtcNow;
     }
 
-    public static Result<VDeleCustomerProfile, Error> Create(
+    public static Result<SpecialistProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid cityId,
         string? email)
     {
         if (userId == Guid.Empty)
-            return CustomerErrors.UserIdIsEmpty();
+            return SpecialistErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return CustomerErrors.FullNameIsEmpty();
+            return SpecialistErrors.FullNameIsEmpty();
 
         if (cityId == Guid.Empty)
-            return CustomerErrors.CityIdIsEmpty();
+            return SpecialistErrors.CityIdIsEmpty();
 
-        return new VDeleCustomerProfile(
+        return new SpecialistProfile(
             userId,
             fullName.Trim(),
             cityId,
