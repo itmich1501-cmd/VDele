@@ -49,11 +49,11 @@ public class SendPhoneCodeHandler
     private readonly ISmsSender _smsSender;
     private readonly PhoneVerificationOptions _options;
     private readonly IValidator<SendPhoneCodeRequest> _validator;
-    private readonly ILogger<RegisterUserHandler> _logger;
+    private readonly ILogger<SendPhoneCodeHandler> _logger;
 
     public SendPhoneCodeHandler(ISmsSender smsSender, 
         IValidator<SendPhoneCodeRequest> validator,
-        ILogger<RegisterUserHandler> logger,
+        ILogger<SendPhoneCodeHandler> logger,
         IPhoneVerificationCodeRepository repository,
         ITransactionManager transactionManager,
         IOptions<PhoneVerificationOptions> options)

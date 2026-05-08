@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Configuration;
+using Osnovanie.Modules.Auth.Contracts;
 using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Features;
 using Osnovanie.Modules.Auth.Jwt;
@@ -25,17 +26,14 @@ public static class AuthModule
         services.Configure<PhoneVerificationOptions>(
             configuration.GetSection("Auth:PhoneVerification"));
 
-        services.AddScoped<RegisterUserHandler>();
         services.AddScoped<VerifyEmailHandler>();
         services.AddScoped<LoginHandler>();
         services.AddScoped<SendPhoneCodeHandler>();
         services.AddScoped<VerifyPhoneCodeHandler>();
         
-        services.AddScoped<RegisterVDeleCustomerByPhoneHandler>();
-        services.AddScoped<RegisterVDeleSpecialistByPhoneHandler>();
-        services.AddScoped<RegisterVLavkeCustomerByPhoneHandler>();
-        services.AddScoped<RegisterVLavkeSellerByPhoneHandler>();
-        services.AddScoped<PhoneRegistrationService>();
+        services.AddScoped<AuthRegistrationService>();
+        
+        services.AddScoped<IAuthRegistrationService, AuthRegistrationService>();
         
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
         

@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Infrastructure.Configurations.Auth;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.ReferenceData.Cities.Domain;
+using Osnovanie.Modules.VDele.Customers.Domain;
+using Osnovanie.Modules.VDele.Specialists.Domain;
 
 namespace Osnovanie.Infrastructure.Database;
 
@@ -40,7 +42,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, O
     public DbSet<PhoneVerificationCode> PhoneVerificationCodes => Set<PhoneVerificationCode>();
     public DbSet<City> Cities => Set<City>();
 
-    public DbSet<VDeleCustomerProfile> VDeleCustomerProfiles => Set<VDeleCustomerProfile>();
-    public DbSet<VDeleSpecialistProfile> VDeleSpecialistProfiles => Set<VDeleSpecialistProfile>();
-    public DbSet<VLavkeSellerProfile> VLavkeSellerProfiles => Set<VLavkeSellerProfile>();
+    public DbSet<CustomerProfile> VDeleCustomerProfiles => Set<CustomerProfile>();
+    public DbSet<SpecialistProfile> VDeleSpecialistProfiles => Set<SpecialistProfile>();
+    public DbSet<SellerProfile> VLavkeSellerProfiles => Set<SellerProfile>();
 }

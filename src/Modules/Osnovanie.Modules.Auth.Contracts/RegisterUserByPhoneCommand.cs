@@ -1,6 +1,8 @@
 namespace Osnovanie.Modules.Auth.Contracts;
 
-public class RegisterUserByPhoneCommand
-{
-    
-}
+public sealed record RegisterUserByPhoneCommand(
+    string Phone,
+    string Password,
+    string? Email,
+    string ApplicationCode,
+    string RoleCode);

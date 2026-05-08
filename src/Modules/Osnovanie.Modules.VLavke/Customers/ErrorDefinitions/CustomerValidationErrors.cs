@@ -1,6 +1,6 @@
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
+namespace Osnovanie.Modules.VLavke.Customers.ErrorDefinitions;
 
 public static class CustomerValidationErrors
 {

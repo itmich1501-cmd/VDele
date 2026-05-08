@@ -4,19 +4,19 @@ using Osnovanie.Modules.Auth.Domain;
 
 namespace Osnovanie.Infrastructure.Repositories.Auth;
 
-public sealed class VDeleCustomerProfileRepository : IVDeleCustomerProfileRepository
+public sealed class SellerProfileRepository : ISellerProfileRepository
 {
     private readonly AppDbContext _dbContext;
 
-    public VDeleCustomerProfileRepository(AppDbContext dbContext)
+    public SellerProfileRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
     public async Task Add(
-        VDeleCustomerProfile profile,
+        VLavkeSellerProfile profile,
         CancellationToken cancellationToken)
     {
-        await _dbContext.VDeleCustomerProfiles.AddAsync(profile, cancellationToken);
+        await _dbContext.VLavkeSellerProfiles.AddAsync(profile, cancellationToken);
     }
 }

@@ -5,9 +5,9 @@ using Osnovanie.Modules.Auth.Domain;
 namespace Osnovanie.Infrastructure.Configurations.VLavke;
 
 public sealed class VLavkeSellerProfileConfiguration
-    : IEntityTypeConfiguration<VLavkeSellerProfile>
+    : IEntityTypeConfiguration<SellerProfile>
 {
-    public void Configure(EntityTypeBuilder<VLavkeSellerProfile> builder)
+    public void Configure(EntityTypeBuilder<SellerProfile> builder)
     {
         builder.ToTable("seller_profiles", "vlavke");
 

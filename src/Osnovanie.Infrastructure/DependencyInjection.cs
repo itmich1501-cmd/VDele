@@ -10,6 +10,7 @@ using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Contracts.Services;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.ReferenceData.DataBase;
+using Osnovanie.Modules.VDele.Customers.Contracts;
 using Osnovanie.Shared.DataBase;
 using Osnovanie.Shared.Email;
 
@@ -40,9 +41,9 @@ public static class DependencyInjection
         services.AddScoped<ITransactionManager, EfTransactionManager<AppDbContext>>();
         services.AddScoped<IPhoneVerificationCodeRepository, PhoneVerificationCodeRepository>();
         services.AddScoped<IUserAccessRepository, UserAccessRepository>();
-        services.AddScoped<IVDeleCustomerProfileRepository, VDeleCustomerProfileRepository>();
-        services.AddScoped<IVDeleSpecialistProfileRepository, VDeleSpecialistProfileRepository>();
-        services.AddScoped<IVLavkeSellerProfileRepository, VLavkeSellerProfileRepository>();
+        services.AddScoped<ICustomerProfileRepository, CustomerProfileRepository>();
+        services.AddScoped<ISpecialistsProfileRepository, SpecialistProfileRepository>();
+        services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
         
         services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()

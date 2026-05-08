@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Osnovanie.Modules.Auth.Contracts;
 using Osnovanie.Modules.Auth.Contracts.Persistence;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
@@ -18,30 +19,27 @@ public sealed record PhoneRegistrationCommand(
     string RoleCode,
     Guid CityId);
 
-public sealed class PhoneRegistrationService
+public sealed class AuthRegistrationService : IAuthRegistrationService
 {
     private readonly UserManager<User> _userManager;
     private readonly IPhoneVerificationCodeRepository _phoneCodeRepository;
     private readonly IUserAccessRepository _userAccessRepository;
-    private readonly ITransactionManager _transactionManager;
-    private readonly ILogger<PhoneRegistrationService> _logger;
+    private readonly ILogger<AuthRegistrationService> _logger;
 
-    public PhoneRegistrationService(
+    public AuthRegistrationService(
         UserManager<User> userManager,
         IPhoneVerificationCodeRepository phoneCodeRepository,
         IUserAccessRepository userAccessRepository,
-        ITransactionManager transactionManager,
-        ILogger<PhoneRegistrationService> logger)
+        ILogger<AuthRegistrationService> logger)
     {
         _userManager = userManager;
         _phoneCodeRepository = phoneCodeRepository;
         _userAccessRepository = userAccessRepository;
-        _transactionManager = transactionManager;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> Register(
-        PhoneRegistrationCommand command,
+    public async Task<Result<Guid, Errors>> RegisterByPhone(
+        RegisterUserByPhoneCommand command,
         CancellationToken cancellationToken)
     {
         var existingUser = await _userManager.Users
@@ -57,13 +55,6 @@ public sealed class PhoneRegistrationService
         if (verificationCode is null)
             return AuthErrors.PhoneVerificationCode.NotConfirmed().ToErrors();
 
-        var transactionResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
-
-        if (transactionResult.IsFailure)
-            return transactionResult.Error!.ToErrors();
-
-        await using var transaction = transactionResult.Value!;
-
         var user = new User
         {
             Id = Guid.NewGuid(),
@@ -71,15 +62,13 @@ public sealed class PhoneRegistrationService
             NormalizedUserName = command.Phone.ToUpperInvariant(),
             PhoneNumber = command.Phone,
             PhoneNumberConfirmed = true,
-            FirstName = command.FirstName.Trim(),
+            Email = string.IsNullOrWhiteSpace(command.Email) ? null : command.Email.Trim()
         };
 
         var createUserResult = await _userManager.CreateAsync(user, command.Password);
 
         if (!createUserResult.Succeeded)
         {
-            await transaction.RollbackAsync(cancellationToken);
-
             _logger.LogWarning(
                 "Failed to register user by phone {Phone}. Errors: {Errors}",
                 command.Phone,
@@ -94,10 +83,7 @@ public sealed class PhoneRegistrationService
             command.RoleCode);
 
         if (userAccessResult.IsFailure)
-        {
-            await transaction.RollbackAsync(cancellationToken);
             return userAccessResult.Error!.ToErrors();
-        }
 
         await _userAccessRepository.Add(
             userAccessResult.Value!,
@@ -106,23 +92,7 @@ public sealed class PhoneRegistrationService
         var markAsUsedResult = verificationCode.MarkAsUsed();
 
         if (markAsUsedResult.IsFailure)
-        {
-            await transaction.RollbackAsync(cancellationToken);
             return markAsUsedResult.Error!.ToErrors();
-        }
-
-        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
-
-        if (saveResult.IsFailure)
-        {
-            await transaction.RollbackAsync(cancellationToken);
-            return saveResult.Error!.ToErrors();
-        }
-
-        var commitResult = await transaction.CommitAsync(cancellationToken);
-
-        if (commitResult.IsFailure)
-            return commitResult.Error!.ToErrors();
 
         return user.Id;
     }

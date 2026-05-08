@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.VDele.Specialists.Domain;
 
 namespace Osnovanie.Infrastructure.Configurations.VDele;
 
 public sealed class VDeleSpecialistProfileConfiguration
-    : IEntityTypeConfiguration<VDeleSpecialistProfile>
+    : IEntityTypeConfiguration<SpecialistProfile>
 {
-    public void Configure(EntityTypeBuilder<VDeleSpecialistProfile> builder)
+    public void Configure(EntityTypeBuilder<SpecialistProfile> builder)
     {
         builder.ToTable("specialist_profiles", "vdele");
 

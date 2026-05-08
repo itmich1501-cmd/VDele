@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.VDele.Customers.Domain;
 
 namespace Osnovanie.Infrastructure.Configurations.VDele;
 
 public sealed class VDeleCustomerProfileConfiguration
-    : IEntityTypeConfiguration<VDeleCustomerProfile>
+    : IEntityTypeConfiguration<CustomerProfile>
 {
-    public void Configure(EntityTypeBuilder<VDeleCustomerProfile> builder)
+    public void Configure(EntityTypeBuilder<CustomerProfile> builder)
     {
         builder.ToTable("customer_profiles", "vdele");
 

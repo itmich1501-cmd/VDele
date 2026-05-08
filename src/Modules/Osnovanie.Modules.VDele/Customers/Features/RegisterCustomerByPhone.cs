@@ -3,9 +3,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.Auth.Contracts;
 using Osnovanie.Modules.VDele.Customers.Contracts;
 using Osnovanie.Modules.VDele.Customers.Domain;
 using Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
@@ -29,36 +31,35 @@ public sealed class RegisterCustomerByPhoneValidator
     {
         RuleFor(x => x.Phone)
             .NotEmpty()
-            .WithError(CustomerRequestErrors.PhoneIsEmpty());
+            .WithError(CustomerValidationErrors.PhoneIsEmpty());
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithError(CustomerRequestErrors.PasswordIsEmpty())
+            .WithError(CustomerValidationErrors.PasswordIsEmpty())
             .MinimumLength(6)
-            .WithError(CustomerRequestErrors.PasswordIsTooShort());
+            .WithError(CustomerValidationErrors.PasswordIsTooShort());
 
         RuleFor(x => x.FullName)
             .NotEmpty()
-            .WithError(CustomerRequestErrors.FullNameIsEmpty())
+            .WithError(CustomerValidationErrors.FullNameIsEmpty())
             .MaximumLength(200)
-            .WithError(CustomerRequestErrors.FullNameIsTooLong());
+            .WithError(CustomerValidationErrors.FullNameIsTooLong());
 
         RuleFor(x => x.CityId)
             .NotEmpty()
-            .WithError(CustomerRequestErrors.CityIdIsEmpty());
+            .WithError(CustomerValidationErrors.CityIdIsEmpty());
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .When(x => !string.IsNullOrWhiteSpace(x.Email))
-            .WithError(CustomerRequestErrors.EmailIsInvalid());
+            .WithError(CustomerValidationErrors.EmailIsInvalid());
     }
 }
-
 public sealed class RegisterVDeleCustomerByPhoneEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/vdele/customer/register-by-phone", async (
+        app.MapPost("vdele/customers/register-by-phone", async (
             [FromServices] RegisterCustomerByPhoneHandler handler,
             [FromBody] RegisterCustomerByPhoneRequest request,
             CancellationToken cancellationToken) =>
@@ -95,17 +96,12 @@ public sealed class RegisterCustomerByPhoneHandler
         _logger = logger;
     }
 
-     public async Task<Result<Guid, Errors>> Handle(
+    public async Task<Result<Guid, Errors>> Handle(
         RegisterCustomerByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
         if (request is null)
-        {
-            return Error.Validation(
-                "vdele.customer.register.request.empty",
-                "Тело запроса обязательно",
-                "request").ToErrors();
-        }
+            return CustomerValidationErrors.RequestIsEmpty().ToErrors();
 
         var validationResult = await _validator.ValidateAsync(
             request,

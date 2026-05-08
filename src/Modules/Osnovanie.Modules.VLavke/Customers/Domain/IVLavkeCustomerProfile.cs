@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using Osnovanie.Modules.Auth.ErrorDefinitions;
+using Osnovanie.Modules.VLavke.Customers.ErrorDefinitions;
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Domain;
+namespace Osnovanie.Modules.VLavke.Customers.Domain;
 
-public sealed class SellerProfile
+public sealed class IVLavkeCustomerProfile
 {
     public Guid Id { get; private set; }
 
@@ -12,55 +12,51 @@ public sealed class SellerProfile
 
     public string FullName { get; private set; } = null!;
 
-    public Guid MainCityId { get; private set; }
+    public Guid CityId { get; private set; }
 
     public string? Email { get; private set; }
-
-    public string? CompanyName { get; private set; }
-
-    public string? Inn { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private SellerProfile()
+    private IVLavkeCustomerProfile()
     {
     }
 
-    private SellerProfile(
+    private IVLavkeCustomerProfile(
         Guid userId,
         string fullName,
-        Guid mainCityId,
+        Guid cityId,
         string? email)
     {
         Id = Guid.NewGuid();
         UserId = userId;
         FullName = fullName;
-        MainCityId = mainCityId;
+        CityId = cityId;
         Email = email;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public static Result<SellerProfile, Error> Create(
+    public static Result<IVLavkeCustomerProfile, Error> Create(
         Guid userId,
         string fullName,
-        Guid mainCityId,
+        Guid cityId,
         string? email)
     {
         if (userId == Guid.Empty)
-            return SellerErrors.UserIdIsEmpty();
+            return CustomerErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return SellerErrors.FullNameIsEmpty();
+            return CustomerErrors.FullNameIsEmpty();
 
-        if (mainCityId == Guid.Empty)
-            return SellerErrors.MainCityIdIsEmpty();
+        if (cityId == Guid.Empty)
+            return CustomerErrors.CityIdIsEmpty();
 
-        return new SellerProfile(
+        return new IVLavkeCustomerProfile(
             userId,
             fullName.Trim(),
-            mainCityId,
+            cityId,
             string.IsNullOrWhiteSpace(email) ? null : email.Trim());
     }
 }

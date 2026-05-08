@@ -7,12 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Osnovanie.Framework\Osnovanie.Framework.csproj" />
       <ProjectReference Include="..\..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Sellers\Domain\" />
-      <Folder Include="Sellers\Features\" />
+      <ProjectReference Include="..\Osnovanie.Modules.Auth.Contracts\Osnovanie.Modules.Auth.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

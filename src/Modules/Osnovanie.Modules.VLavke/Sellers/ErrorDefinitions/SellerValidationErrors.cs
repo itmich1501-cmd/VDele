@@ -1,54 +1,54 @@
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
+namespace Osnovanie.Modules.VLavke.Sellers.ErrorDefinitions;
 
-public static class CustomerValidationErrors
+public static class SellerValidationErrors
 {
     public static Error PhoneIsEmpty() =>
         Error.Validation(
-            "vdele.customer.phone.empty",
+            "vlavke.seller.phone.empty",
             "Телефон обязателен",
             "phone");
 
     public static Error PasswordIsEmpty() =>
         Error.Validation(
-            "vdele.customer.password.empty",
+            "vlavke.seller.password.empty",
             "Пароль обязателен",
             "password");
 
     public static Error PasswordIsTooShort() =>
         Error.Validation(
-            "vdele.customer.password.too_short",
+            "vlavke.seller.password.too_short",
             "Пароль должен содержать минимум 6 символов",
             "password");
 
     public static Error FullNameIsEmpty() =>
         Error.Validation(
-            "vdele.customer.full_name.empty",
+            "vlavke.seller.full_name.empty",
             "ФИО обязательно",
             "fullName");
 
     public static Error FullNameIsTooLong() =>
         Error.Validation(
-            "vdele.customer.full_name.too_long",
+            "vlavke.seller.full_name.too_long",
             "ФИО не должно превышать 200 символов",
             "fullName");
 
-    public static Error CityIdIsEmpty() =>
+    public static Error MainCityIdIsEmpty() =>
         Error.Validation(
-            "vdele.customer.city_id.empty",
-            "Город обязателен",
-            "cityId");
+            "vlavke.seller.main_city_id.empty",
+            "Основной город обязателен",
+            "mainCityId");
 
     public static Error EmailIsInvalid() =>
         Error.Validation(
-            "vdele.customer.email.invalid",
+            "vlavke.seller.email.invalid",
             "Некорректный email",
             "email");
 
     public static Error RequestIsEmpty() =>
         Error.Validation(
-            "vdele.customer.register.request.empty",
+            "vlavke.seller.register.request.empty",
             "Тело запроса обязательно",
             "request");
 }

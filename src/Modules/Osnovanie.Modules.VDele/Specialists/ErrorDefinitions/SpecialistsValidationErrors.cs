@@ -1,54 +1,60 @@
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
+namespace Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
 
-public static class CustomerValidationErrors
+public static class SpecialistValidationErrors
 {
     public static Error PhoneIsEmpty() =>
         Error.Validation(
-            "vdele.customer.phone.empty",
+            "vdele.specialist.phone.empty",
             "Телефон обязателен",
             "phone");
 
     public static Error PasswordIsEmpty() =>
         Error.Validation(
-            "vdele.customer.password.empty",
+            "vdele.specialist.password.empty",
             "Пароль обязателен",
             "password");
 
     public static Error PasswordIsTooShort() =>
         Error.Validation(
-            "vdele.customer.password.too_short",
+            "vdele.specialist.password.too_short",
             "Пароль должен содержать минимум 6 символов",
             "password");
 
     public static Error FullNameIsEmpty() =>
         Error.Validation(
-            "vdele.customer.full_name.empty",
+            "vdele.specialist.full_name.empty",
             "ФИО обязательно",
             "fullName");
 
     public static Error FullNameIsTooLong() =>
         Error.Validation(
-            "vdele.customer.full_name.too_long",
+            "vdele.specialist.full_name.too_long",
             "ФИО не должно превышать 200 символов",
             "fullName");
 
     public static Error CityIdIsEmpty() =>
         Error.Validation(
-            "vdele.customer.city_id.empty",
+            "vdele.specialist.city_id.empty",
             "Город обязателен",
             "cityId");
 
     public static Error EmailIsInvalid() =>
         Error.Validation(
-            "vdele.customer.email.invalid",
+            "vdele.specialist.email.invalid",
             "Некорректный email",
             "email");
 
+    public static Error AboutIsTooLong() =>
+        Error.Validation(
+            "vdele.specialist.about.too_long",
+            "Описание не должно превышать 2000 символов",
+            "about");
+
     public static Error RequestIsEmpty() =>
         Error.Validation(
-            "vdele.customer.register.request.empty",
+            "vdele.specialist.register.request.empty",
             "Тело запроса обязательно",
             "request");
 }
