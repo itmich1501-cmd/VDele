@@ -1,8 +1,8 @@
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
+namespace Osnovanie.Modules.VLavke.Customers.ErrorDefinitions;
 
-public static class CustomerErrors
+public static class VLavkeCustomerErrors
 {
     public static Error UserIdIsEmpty() =>
         Error.Validation(

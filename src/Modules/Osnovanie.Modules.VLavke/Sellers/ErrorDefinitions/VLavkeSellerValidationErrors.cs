@@ -2,7 +2,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VLavke.Sellers.ErrorDefinitions;
 
-public static class SellerValidationErrors
+public static class VLavkeSellerValidationErrors
 {
     public static Error PhoneIsEmpty() =>
         Error.Validation(

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Infrastructure.Database;
-using Osnovanie.Modules.Auth.Contracts.Persistence;
+using Osnovanie.Modules.Auth.Abstractions.Persistence;
 using Osnovanie.Modules.Auth.Domain;
 
 namespace Osnovanie.Infrastructure.Repositories.Auth;

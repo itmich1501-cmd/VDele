@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.VLavke.Sellers.Domain;
 
 namespace Osnovanie.Infrastructure.Configurations.VLavke;
 
 public sealed class VLavkeSellerProfileConfiguration
-    : IEntityTypeConfiguration<SellerProfile>
+    : IEntityTypeConfiguration<VLavkeSellerProfile>
 {
-    public void Configure(EntityTypeBuilder<SellerProfile> builder)
+    public void Configure(EntityTypeBuilder<VLavkeSellerProfile> builder)
     {
         builder.ToTable("seller_profiles", "vlavke");
 
@@ -25,12 +25,6 @@ public sealed class VLavkeSellerProfileConfiguration
 
         builder.Property(x => x.Email)
             .HasMaxLength(200);
-
-        builder.Property(x => x.CompanyName)
-            .HasMaxLength(300);
-
-        builder.Property(x => x.Inn)
-            .HasMaxLength(20);
 
         builder.Property(x => x.CreatedAt)
             .IsRequired();

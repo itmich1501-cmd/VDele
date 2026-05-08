@@ -1,6 +1,6 @@
 using Osnovanie.Modules.Auth.Domain;
 
-namespace Osnovanie.Modules.Auth.Contracts.Persistence;
+namespace Osnovanie.Modules.Auth.Abstractions.Persistence;
 
 public interface IPhoneVerificationCodeRepository
 {

@@ -6,6 +6,8 @@ using Osnovanie.Infrastructure.Configurations;
 using Osnovanie.Modules.Auth;
 using Osnovanie.Modules.Auth.Configuration;
 using Osnovanie.Modules.ReferenceData;
+using Osnovanie.Modules.VDele;
+using Osnovanie.Modules.VLavke;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -29,6 +31,10 @@ try
 
     builder.Services.AddAuthModule(builder.Configuration);
     builder.Services.AddReferenceDataModule();
+    
+    
+    builder.Services.AddVDeleModule();
+    builder.Services.AddVLavkeModule();
     
     builder.Services.AddInfrastructure(builder.Configuration);
     

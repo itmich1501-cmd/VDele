@@ -8,60 +8,60 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Contracts;
-using Osnovanie.Modules.VDele.Customers.Contracts;
-using Osnovanie.Modules.VDele.Customers.Domain;
-using Osnovanie.Modules.VDele.Customers.ErrorDefinitions;
+using Osnovanie.Modules.VLavke.Customers.Contracts;
+using Osnovanie.Modules.VLavke.Customers.Domain;
+using Osnovanie.Modules.VLavke.Customers.ErrorDefinitions;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
 using Osnovanie.Shared.Validation;
 
-namespace Osnovanie.Modules.VDele.Customers.Features;
+namespace Osnovanie.Modules.VLavke.Customers.Features;
 
-public sealed record RegisterCustomerByPhoneRequest(
+public sealed record RegisterVLavkeCustomerByPhoneRequest(
     string Phone,
     string Password,
     string FullName,
     Guid CityId,
     string? Email);
 
-public sealed class RegisterCustomerByPhoneValidator
-    : AbstractValidator<RegisterCustomerByPhoneRequest>
+public sealed class RegisterVLavkeCustomerByPhoneValidator
+    : AbstractValidator<RegisterVLavkeCustomerByPhoneRequest>
 {
-    public RegisterCustomerByPhoneValidator()
+    public RegisterVLavkeCustomerByPhoneValidator()
     {
         RuleFor(x => x.Phone)
             .NotEmpty()
-            .WithError(CustomerValidationErrors.PhoneIsEmpty());
+            .WithError(VLavkeCustomerValidationErrors.PhoneIsEmpty());
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithError(CustomerValidationErrors.PasswordIsEmpty())
+            .WithError(VLavkeCustomerValidationErrors.PasswordIsEmpty())
             .MinimumLength(6)
-            .WithError(CustomerValidationErrors.PasswordIsTooShort());
+            .WithError(VLavkeCustomerValidationErrors.PasswordIsTooShort());
 
         RuleFor(x => x.FullName)
             .NotEmpty()
-            .WithError(CustomerValidationErrors.FullNameIsEmpty())
+            .WithError(VLavkeCustomerValidationErrors.FullNameIsEmpty())
             .MaximumLength(200)
-            .WithError(CustomerValidationErrors.FullNameIsTooLong());
+            .WithError(VLavkeCustomerValidationErrors.FullNameIsTooLong());
 
         RuleFor(x => x.CityId)
             .NotEmpty()
-            .WithError(CustomerValidationErrors.CityIdIsEmpty());
+            .WithError(VLavkeCustomerValidationErrors.CityIdIsEmpty());
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .When(x => !string.IsNullOrWhiteSpace(x.Email))
-            .WithError(CustomerValidationErrors.EmailIsInvalid());
+            .WithError(VLavkeCustomerValidationErrors.EmailIsInvalid());
     }
 }
-public sealed class RegisterVDeleCustomerByPhoneEndpoint : IEndpoint
+public sealed class RegisterVLavkeCustomerByPhoneEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("vdele/customers/register-by-phone", async (
-            [FromServices] RegisterCustomerByPhoneHandler handler,
-            [FromBody] RegisterCustomerByPhoneRequest request,
+        app.MapPost("vlavke/customers/register-by-phone", async (
+            [FromServices] RegisterVLavkeCustomerByPhoneHandler handler,
+            [FromBody] RegisterVLavkeCustomerByPhoneRequest request,
             CancellationToken cancellationToken) =>
         {
             var result = await handler.Handle(request, cancellationToken);
@@ -71,37 +71,37 @@ public sealed class RegisterVDeleCustomerByPhoneEndpoint : IEndpoint
     }
 }
 
-public sealed class RegisterCustomerByPhoneHandler
+public sealed class RegisterVLavkeCustomerByPhoneHandler
 {
     private readonly IAuthRegistrationService _authRegistrationService;
-    private readonly ICustomerProfileRepository _profileRepository;
-    private readonly ICustomersReadDbContext _customersReadDbContext;
+    private readonly IVLavkeCustomerProfileRepository _profileRepository;
+    private readonly IVLavkeCustomersReadDbContext _ivLavkeCustomersReadDbContext;
     private readonly ITransactionManager _transactionManager;
-    private readonly IValidator<RegisterCustomerByPhoneRequest> _validator;
-    private readonly ILogger<RegisterCustomerByPhoneHandler> _logger;
+    private readonly IValidator<RegisterVLavkeCustomerByPhoneRequest> _validator;
+    private readonly ILogger<RegisterVLavkeCustomerByPhoneHandler> _logger;
 
-    public RegisterCustomerByPhoneHandler(
+    public RegisterVLavkeCustomerByPhoneHandler(
         IAuthRegistrationService authRegistrationService,
-        ICustomerProfileRepository profileRepository,
-        ICustomersReadDbContext customersReadDbContext,
+        IVLavkeCustomerProfileRepository profileRepository,
+        IVLavkeCustomersReadDbContext ivLavkeCustomersReadDbContext,
         ITransactionManager transactionManager,
-        IValidator<RegisterCustomerByPhoneRequest> validator,
-        ILogger<RegisterCustomerByPhoneHandler> logger)
+        IValidator<RegisterVLavkeCustomerByPhoneRequest> validator,
+        ILogger<RegisterVLavkeCustomerByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
         _profileRepository = profileRepository;
-        _customersReadDbContext = customersReadDbContext;
+        _ivLavkeCustomersReadDbContext = ivLavkeCustomersReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
         _logger = logger;
     }
 
     public async Task<Result<Guid, Errors>> Handle(
-        RegisterCustomerByPhoneRequest? request,
+        RegisterVLavkeCustomerByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
         if (request is null)
-            return CustomerValidationErrors.RequestIsEmpty().ToErrors();
+            return VLavkeCustomerValidationErrors.RequestIsEmpty().ToErrors();
 
         var validationResult = await _validator.ValidateAsync(
             request,
@@ -123,7 +123,7 @@ public sealed class RegisterCustomerByPhoneHandler
                 request.Phone,
                 request.Password,
                 request.Email,
-                ApplicationCodes.VDele,
+                ApplicationCodes.VLavke,
                 RoleCodes.Customer),
             cancellationToken);
 
@@ -135,16 +135,16 @@ public sealed class RegisterCustomerByPhoneHandler
 
         var userId = authResult.Value;
 
-        var profileExists = await _customersReadDbContext.CustomerProfilesRead
+        var profileExists = await _ivLavkeCustomersReadDbContext.CustomerProfilesRead
             .AnyAsync(x => x.UserId == userId, cancellationToken);
 
         if (profileExists)
         {
             await transaction.RollbackAsync(cancellationToken);
-            return CustomerErrors.AlreadyExists(userId).ToErrors();
+            return VLavkeCustomerErrors.AlreadyExists(userId).ToErrors();
         }
 
-        var profileResult = CustomerProfile.Create(
+        var profileResult = VLavkeCustomerProfile.Create(
             userId,
             request.FullName,
             request.CityId,
@@ -175,7 +175,7 @@ public sealed class RegisterCustomerByPhoneHandler
             return commitResult.Error!.ToErrors();
 
         _logger.LogInformation(
-            "VDele customer registered. UserId: {UserId}",
+            "VLavke customer registered. UserId: {UserId}",
             userId);
 
         return userId;

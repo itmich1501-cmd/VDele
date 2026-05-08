@@ -6,9 +6,9 @@ using Osnovanie.Modules.VDele.Specialists.Domain;
 namespace Osnovanie.Infrastructure.Configurations.VDele;
 
 public sealed class VDeleSpecialistProfileConfiguration
-    : IEntityTypeConfiguration<SpecialistProfile>
+    : IEntityTypeConfiguration<VDeleSpecialistProfile>
 {
-    public void Configure(EntityTypeBuilder<SpecialistProfile> builder)
+    public void Configure(EntityTypeBuilder<VDeleSpecialistProfile> builder)
     {
         builder.ToTable("specialist_profiles", "vdele");
 

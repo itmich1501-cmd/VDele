@@ -6,9 +6,9 @@ using Osnovanie.Modules.VDele.Customers.Domain;
 namespace Osnovanie.Infrastructure.Configurations.VDele;
 
 public sealed class VDeleCustomerProfileConfiguration
-    : IEntityTypeConfiguration<CustomerProfile>
+    : IEntityTypeConfiguration<VDeleCustomerProfile>
 {
-    public void Configure(EntityTypeBuilder<CustomerProfile> builder)
+    public void Configure(EntityTypeBuilder<VDeleCustomerProfile> builder)
     {
         builder.ToTable("customer_profiles", "vdele");
 

@@ -4,9 +4,9 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VDele.Specialists.Domain;
 
-public sealed class SpecialistProfile
+public sealed class VDeleSpecialistProfile
 {
-    private SpecialistProfile(
+    private VDeleSpecialistProfile(
         Guid id,
         Guid userId,
         string fullName,
@@ -39,7 +39,7 @@ public sealed class SpecialistProfile
 
     public DateTime? UpdatedAt { get; private set; }
 
-    public static Result<SpecialistProfile, Error> Create(
+    public static Result<VDeleSpecialistProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid cityId,
@@ -47,21 +47,21 @@ public sealed class SpecialistProfile
         string? about = null)
     {
         if (userId == Guid.Empty)
-            return SpecialistErrors.UserIdIsEmpty();
+            return VDeleSpecialistErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return SpecialistErrors.FullNameIsEmpty();
+            return VDeleSpecialistErrors.FullNameIsEmpty();
 
         if (fullName.Length > 200)
-            return SpecialistErrors.FullNameIsTooLong();
+            return VDeleSpecialistErrors.FullNameIsTooLong();
 
         if (cityId == Guid.Empty)
-            return SpecialistErrors.CityIdIsEmpty();
+            return VDeleSpecialistErrors.CityIdIsEmpty();
 
         if (!string.IsNullOrWhiteSpace(about) && about.Length > 2000)
-            return SpecialistErrors.AboutIsTooLong();
+            return VDeleSpecialistErrors.AboutIsTooLong();
 
-        var specialistProfile = new SpecialistProfile(
+        var specialistProfile = new VDeleSpecialistProfile(
             Guid.NewGuid(),
             userId,
             fullName.Trim(),

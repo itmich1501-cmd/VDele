@@ -4,7 +4,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VLavke.Customers.Domain;
 
-public sealed class IVLavkeCustomerProfile
+public sealed class VLavkeCustomerProfile
 {
     public Guid Id { get; private set; }
 
@@ -20,11 +20,11 @@ public sealed class IVLavkeCustomerProfile
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private IVLavkeCustomerProfile()
+    private VLavkeCustomerProfile()
     {
     }
 
-    private IVLavkeCustomerProfile(
+    private VLavkeCustomerProfile(
         Guid userId,
         string fullName,
         Guid cityId,
@@ -38,22 +38,22 @@ public sealed class IVLavkeCustomerProfile
         CreatedAt = DateTime.UtcNow;
     }
 
-    public static Result<IVLavkeCustomerProfile, Error> Create(
+    public static Result<VLavkeCustomerProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid cityId,
         string? email)
     {
         if (userId == Guid.Empty)
-            return CustomerErrors.UserIdIsEmpty();
+            return VLavkeCustomerErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return CustomerErrors.FullNameIsEmpty();
+            return VLavkeCustomerErrors.FullNameIsEmpty();
 
         if (cityId == Guid.Empty)
-            return CustomerErrors.CityIdIsEmpty();
+            return VLavkeCustomerErrors.CityIdIsEmpty();
 
-        return new IVLavkeCustomerProfile(
+        return new VLavkeCustomerProfile(
             userId,
             fullName.Trim(),
             cityId,

@@ -4,5 +4,5 @@ namespace Osnovanie.Modules.VLavke.Customers.Contracts;
 
 public interface IVLavkeCustomersReadDbContext
 {
-    IQueryable<IVLavkeCustomerProfile> CustomerProfilesRead { get; }
+    IQueryable<VLavkeCustomerProfile> CustomerProfilesRead { get; }
 }

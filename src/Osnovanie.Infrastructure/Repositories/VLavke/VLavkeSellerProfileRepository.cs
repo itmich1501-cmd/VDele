@@ -1,14 +1,14 @@
 using Osnovanie.Infrastructure.Database;
-using Osnovanie.Modules.Auth.Contracts.Persistence;
-using Osnovanie.Modules.Auth.Domain;
+using Osnovanie.Modules.VLavke.Sellers.Contracts;
+using Osnovanie.Modules.VLavke.Sellers.Domain;
 
-namespace Osnovanie.Infrastructure.Repositories.Auth;
+namespace Osnovanie.Infrastructure.Repositories.VLavke;
 
-public sealed class SellerProfileRepository : ISellerProfileRepository
+public sealed class VLavkeSellerProfileRepository : IVLavkeSellerProfileRepository
 {
     private readonly AppDbContext _dbContext;
 
-    public SellerProfileRepository(AppDbContext dbContext)
+    public VLavkeSellerProfileRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }

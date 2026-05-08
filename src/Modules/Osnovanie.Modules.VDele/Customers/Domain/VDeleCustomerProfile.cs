@@ -4,7 +4,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VDele.Customers.Domain;
 
-public sealed class CustomerProfile
+public sealed class VDeleCustomerProfile
 {
     public Guid Id { get; private set; }
 
@@ -20,11 +20,11 @@ public sealed class CustomerProfile
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private CustomerProfile()
+    private VDeleCustomerProfile()
     {
     }
 
-    private CustomerProfile(
+    private VDeleCustomerProfile(
         Guid userId,
         string fullName,
         Guid cityId,
@@ -38,22 +38,22 @@ public sealed class CustomerProfile
         CreatedAt = DateTime.UtcNow;
     }
 
-    public static Result<CustomerProfile, Error> Create(
+    public static Result<VDeleCustomerProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid cityId,
         string? email)
     {
         if (userId == Guid.Empty)
-            return CustomerErrors.UserIdIsEmpty();
+            return VDeleCustomerErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return CustomerErrors.FullNameIsEmpty();
+            return VDeleCustomerErrors.FullNameIsEmpty();
 
         if (cityId == Guid.Empty)
-            return CustomerErrors.CityIdIsEmpty();
+            return VDeleCustomerErrors.CityIdIsEmpty();
 
-        return new CustomerProfile(
+        return new VDeleCustomerProfile(
             userId,
             fullName.Trim(),
             cityId,

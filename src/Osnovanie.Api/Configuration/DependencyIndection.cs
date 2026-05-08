@@ -8,8 +8,6 @@ public static class DependencyIndection
 {
     public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<RegisterUserHandler>();
-        
         services
             .AddSerilogLogging(configuration)
             .AddOpenApiSpec();

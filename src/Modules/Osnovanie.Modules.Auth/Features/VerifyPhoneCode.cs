@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
-using Osnovanie.Modules.Auth.Contracts.Persistence;
+using Osnovanie.Modules.Auth.Abstractions.Persistence;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Modules.Auth.Validation;
 using Osnovanie.Shared;

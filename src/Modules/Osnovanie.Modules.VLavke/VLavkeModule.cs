@@ -1,6 +1,23 @@
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using Osnovanie.Framework.EndpointSettings;
+using Osnovanie.Modules.VLavke.Customers.Features;
+using Osnovanie.Modules.VLavke.Sellers.Features;
+
 namespace Osnovanie.Modules.VLavke;
 
-public class VLavkeModule
+public static class VLavkeModule
 {
-    
+    public static IServiceCollection AddVLavkeModule(
+        this IServiceCollection services)
+    {
+        services.AddEndpoints(typeof(VLavkeModule).Assembly);
+
+        services.AddScoped<RegisterVLavkeCustomerByPhoneHandler>();
+        services.AddScoped<RegisterSellerByPhoneHandler>();
+
+        services.AddValidatorsFromAssembly(typeof(VLavkeModule).Assembly);
+
+        return services;
+    }
 }

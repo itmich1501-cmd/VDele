@@ -1,4 +1,4 @@
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -8,61 +8,69 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Contracts;
-using Osnovanie.Modules.VLavke.Sellers.Contracts;
-using Osnovanie.Modules.VLavke.Sellers.Domain;
-using Osnovanie.Modules.VLavke.Sellers.ErrorDefinitions;
+using Osnovanie.Modules.Auth.Services;
+using Osnovanie.Modules.VDele.Customers.Contracts;
+using Osnovanie.Modules.VDele.Specialists.Contracts;
+using Osnovanie.Modules.VDele.Specialists.Domain;
+using Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
 using Osnovanie.Shared;
 using Osnovanie.Shared.DataBase;
 using Osnovanie.Shared.Validation;
 
-namespace Osnovanie.Modules.VLavke.Sellers.Features;
+namespace Osnovanie.Modules.VDele.Specialists.Features;
 
-public sealed record RegisterSellerByPhoneRequest(
+public sealed record RegisterSpecialistByPhoneRequest(
     string Phone,
     string Password,
     string FullName,
-    Guid MainCityId,
-    string? Email);
+    Guid CityId,
+    string? Email,
+    string? About);
 
-public sealed class RegisterSellerByPhoneValidator
-    : AbstractValidator<RegisterSellerByPhoneRequest>
+public sealed class RegisterSpecialistByPhoneValidator
+    : AbstractValidator<RegisterSpecialistByPhoneRequest>
 {
-    public RegisterSellerByPhoneValidator()
+    public RegisterSpecialistByPhoneValidator()
     {
         RuleFor(x => x.Phone)
             .NotEmpty()
-            .WithError(SellerValidationErrors.PhoneIsEmpty());
+            .WithError(SpecialistValidationErrors.PhoneIsEmpty());
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithError(SellerValidationErrors.PasswordIsEmpty())
+            .WithError(SpecialistValidationErrors.PasswordIsEmpty())
             .MinimumLength(6)
-            .WithError(SellerValidationErrors.PasswordIsTooShort());
+            .WithError(SpecialistValidationErrors.PasswordIsTooShort());
 
         RuleFor(x => x.FullName)
             .NotEmpty()
-            .WithError(SellerValidationErrors.FullNameIsEmpty())
+            .WithError(SpecialistValidationErrors.FullNameIsEmpty())
             .MaximumLength(200)
-            .WithError(SellerValidationErrors.FullNameIsTooLong());
+            .WithError(SpecialistValidationErrors.FullNameIsTooLong());
 
-        RuleFor(x => x.MainCityId)
+        RuleFor(x => x.CityId)
             .NotEmpty()
-            .WithError(SellerValidationErrors.MainCityIdIsEmpty());
+            .WithError(SpecialistValidationErrors.CityIdIsEmpty());
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .When(x => !string.IsNullOrWhiteSpace(x.Email))
-            .WithError(SellerValidationErrors.EmailIsInvalid());
+            .WithError(SpecialistValidationErrors.EmailIsInvalid());
+
+        RuleFor(x => x.About)
+            .MaximumLength(2000)
+            .When(x => !string.IsNullOrWhiteSpace(x.About))
+            .WithError(SpecialistValidationErrors.AboutIsTooLong());
     }
 }
 
-public sealed class RegisterSellerByPhoneEndpoint : IEndpoint
+public sealed class RegisterSpecialistByPhoneEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("vlavke/sellers/register-by-phone", async (
-            [FromServices] RegisterSellerByPhoneHandler handler,
-            [FromBody] RegisterSellerByPhoneRequest request,
+        app.MapPost("vdele/specialists/register-by-phone", async (
+            [FromServices] RegisterVDeleSpecialistByPhoneHandler handler,
+            [FromBody] RegisterSpecialistByPhoneRequest request,
             CancellationToken cancellationToken) =>
         {
             var result = await handler.Handle(request, cancellationToken);
@@ -72,37 +80,37 @@ public sealed class RegisterSellerByPhoneEndpoint : IEndpoint
     }
 }
 
-public sealed class RegisterSellerByPhoneHandler
+public sealed class RegisterVDeleSpecialistByPhoneHandler
 {
     private readonly IAuthRegistrationService _authRegistrationService;
-    private readonly ISellerProfileRepository _profileRepository;
-    private readonly ISellersReadDbContext _sellersReadDbContext;
+    private readonly IVDeleSpecialistProfileRepository _profileRepository;
+    private readonly IVDeleSpecialistsReadDbContext _ivDeleSpecialistsReadDbContext;
     private readonly ITransactionManager _transactionManager;
-    private readonly IValidator<RegisterSellerByPhoneRequest> _validator;
-    private readonly ILogger<RegisterSellerByPhoneHandler> _logger;
+    private readonly IValidator<RegisterSpecialistByPhoneRequest> _validator;
+    private readonly ILogger<RegisterVDeleSpecialistByPhoneHandler> _logger;
 
-    public RegisterSellerByPhoneHandler(
+    public RegisterVDeleSpecialistByPhoneHandler(
         IAuthRegistrationService authRegistrationService,
-        ISellerProfileRepository profileRepository,
-        ISellersReadDbContext sellersReadDbContext,
+        IVDeleSpecialistProfileRepository profileRepository,
+        IVDeleSpecialistsReadDbContext ivDeleSpecialistsReadDbContext,
         ITransactionManager transactionManager,
-        IValidator<RegisterSellerByPhoneRequest> validator,
-        ILogger<RegisterSellerByPhoneHandler> logger)
+        IValidator<RegisterSpecialistByPhoneRequest> validator,
+        ILogger<RegisterVDeleSpecialistByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
         _profileRepository = profileRepository;
-        _sellersReadDbContext = sellersReadDbContext;
+        _ivDeleSpecialistsReadDbContext = ivDeleSpecialistsReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
         _logger = logger;
     }
 
     public async Task<Result<Guid, Errors>> Handle(
-        RegisterSellerByPhoneRequest? request,
+        RegisterSpecialistByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
         if (request is null)
-            return SellerValidationErrors.RequestIsEmpty().ToErrors();
+            return SpecialistValidationErrors.RequestIsEmpty().ToErrors();
 
         var validationResult = await _validator.ValidateAsync(
             request,
@@ -124,8 +132,8 @@ public sealed class RegisterSellerByPhoneHandler
                 request.Phone,
                 request.Password,
                 request.Email,
-                ApplicationCodes.VLavke,
-                RoleCodes.Seller),
+                ApplicationCodes.VDele,
+                RoleCodes.Specialist),
             cancellationToken);
 
         if (authResult.IsFailure)
@@ -136,20 +144,21 @@ public sealed class RegisterSellerByPhoneHandler
 
         var userId = authResult.Value;
 
-        var profileExists = await _sellersReadDbContext.SellerProfilesRead
+        var profileExists = await _ivDeleSpecialistsReadDbContext.SpecialistProfilesRead
             .AnyAsync(x => x.UserId == userId, cancellationToken);
 
         if (profileExists)
         {
             await transaction.RollbackAsync(cancellationToken);
-            return SellerErrors.AlreadyExists(userId).ToErrors();
+            return VDeleSpecialistErrors.AlreadyExists(userId).ToErrors();
         }
 
-        var profileResult = SellerProfile.Create(
+        var profileResult = VDeleSpecialistProfile.Create(
             userId,
             request.FullName,
-            request.MainCityId,
-            request.Email);
+            request.CityId,
+            request.Email,
+            request.About);
 
         if (profileResult.IsFailure)
         {
@@ -176,7 +185,7 @@ public sealed class RegisterSellerByPhoneHandler
             return commitResult.Error!.ToErrors();
 
         _logger.LogInformation(
-            "VLavke seller registered. UserId: {UserId}",
+            "VDele specialist registered. UserId: {UserId}",
             userId);
 
         return userId;

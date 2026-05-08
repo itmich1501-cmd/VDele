@@ -12,4 +12,10 @@
       <ProjectReference Include="..\Osnovanie.Modules.Auth.Contracts\Osnovanie.Modules.Auth.Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="CSharpFunctionalExtensions" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    </ItemGroup>
+
 </Project>

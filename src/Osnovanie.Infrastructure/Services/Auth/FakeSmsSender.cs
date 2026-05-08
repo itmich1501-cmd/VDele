@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Osnovanie.Modules.Auth.Contracts.Services;
+using Osnovanie.Modules.Auth.Abstractions.Services;
 
 namespace Osnovanie.Infrastructure.Services.Auth;
 

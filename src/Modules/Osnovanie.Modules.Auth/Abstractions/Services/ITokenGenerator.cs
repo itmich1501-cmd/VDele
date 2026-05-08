@@ -2,7 +2,7 @@ using CSharpFunctionalExtensions;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Shared;
 
-namespace Osnovanie.Modules.Auth.Contracts.Services;
+namespace Osnovanie.Modules.Auth.Abstractions.Services;
 
 public interface ITokenGenerator
 {

@@ -4,9 +4,9 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VLavke.Sellers.Domain;
 
-public sealed class SellerProfile
+public sealed class VLavkeSellerProfile
 {
-    private SellerProfile(
+    private VLavkeSellerProfile(
         Guid id,
         Guid userId,
         string fullName,
@@ -35,25 +35,25 @@ public sealed class SellerProfile
 
     public DateTime? UpdatedAt { get; private set; }
 
-    public static Result<SellerProfile, Error> Create(
+    public static Result<VLavkeSellerProfile, Error> Create(
         Guid userId,
         string fullName,
         Guid mainCityId,
         string? email)
     {
         if (userId == Guid.Empty)
-            return SellerErrors.UserIdIsEmpty();
+            return VLavkeSellerErrors.UserIdIsEmpty();
 
         if (string.IsNullOrWhiteSpace(fullName))
-            return SellerErrors.FullNameIsEmpty();
+            return VLavkeSellerErrors.FullNameIsEmpty();
 
         if (fullName.Length > 200)
-            return SellerErrors.FullNameIsTooLong();
+            return VLavkeSellerErrors.FullNameIsTooLong();
 
         if (mainCityId == Guid.Empty)
-            return SellerErrors.MainCityIdIsEmpty();
+            return VLavkeSellerErrors.MainCityIdIsEmpty();
 
-        var sellerProfile = new SellerProfile(
+        var sellerProfile = new VLavkeSellerProfile(
             Guid.NewGuid(),
             userId,
             fullName.Trim(),

@@ -2,7 +2,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VLavke.Sellers.ErrorDefinitions;
 
-public static class SellerErrors
+public static class VLavkeSellerErrors
 {
     public static Error AlreadyExists(Guid userId) =>
         Error.Conflict(

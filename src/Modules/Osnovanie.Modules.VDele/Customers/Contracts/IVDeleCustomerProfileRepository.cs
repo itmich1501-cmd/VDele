@@ -2,13 +2,13 @@ using Osnovanie.Modules.VDele.Customers.Domain;
 
 namespace Osnovanie.Modules.VDele.Customers.Contracts;
 
-public interface ICustomerProfileRepository
+public interface IVDeleCustomerProfileRepository
 {
     Task<bool> ExistsByUserId(
         Guid userId,
         CancellationToken cancellationToken);
 
     Task Add(
-        CustomerProfile customerProfile,
+        VDeleCustomerProfile vDeleCustomerProfile,
         CancellationToken cancellationToken);
 }

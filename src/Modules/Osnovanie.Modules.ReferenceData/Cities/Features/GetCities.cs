@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
-using Osnovanie.Modules.ReferenceData.DataBase;
+using Osnovanie.Modules.ReferenceData.Contracts;
 using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.ReferenceData.Cities.Features;

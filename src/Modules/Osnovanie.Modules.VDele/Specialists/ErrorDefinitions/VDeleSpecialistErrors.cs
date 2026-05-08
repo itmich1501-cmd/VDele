@@ -2,7 +2,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
 
-public static class SpecialistErrors
+public static class VDeleSpecialistErrors
 {
     public static Error AlreadyExists(Guid userId) =>
         Error.Conflict(
