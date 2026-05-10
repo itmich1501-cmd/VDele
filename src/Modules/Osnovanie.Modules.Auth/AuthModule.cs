@@ -25,6 +25,11 @@ public static class AuthModule
         
         services.Configure<PhoneVerificationOptions>(
             configuration.GetSection("Auth:PhoneVerification"));
+        
+        services.Configure<AdminSeedOptions>(
+            configuration.GetSection(AdminSeedOptions.SECTION_NAME));
+
+        services.AddScoped<AdminSeeder>();
 
         services.AddScoped<VerifyEmailHandler>();
         services.AddScoped<LoginHandler>();
@@ -34,6 +39,8 @@ public static class AuthModule
         services.AddScoped<AuthRegistrationService>();
         
         services.AddScoped<IAuthRegistrationService, AuthRegistrationService>();
+        services.AddScoped<IAuthTokenService, AuthTokenService>();
+        services.AddScoped<IAuthLoginService, AuthLoginService>();
         
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
         
@@ -43,6 +50,9 @@ public static class AuthModule
         {
             options.Password.RequireDigit = false;
             options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequiredLength = 1;
             options.User.RequireUniqueEmail = false;
         });
 

@@ -10,7 +10,6 @@
       <ProjectReference Include="..\..\Osnovanie.Framework\Osnovanie.Framework.csproj" />
       <ProjectReference Include="..\..\Osnovanie.Shared\Osnovanie.Shared.csproj" />
       <ProjectReference Include="..\Osnovanie.Modules.Auth.Contracts\Osnovanie.Modules.Auth.Contracts.csproj" />
-      <ProjectReference Include="..\Osnovanie.Modules.Auth\Osnovanie.Modules.Auth.csproj" />
     </ItemGroup>
 
     <ItemGroup>

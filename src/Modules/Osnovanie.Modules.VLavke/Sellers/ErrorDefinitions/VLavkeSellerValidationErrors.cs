@@ -10,17 +10,11 @@ public static class VLavkeSellerValidationErrors
             "Телефон обязателен",
             "phone");
 
-    public static Error PasswordIsEmpty() =>
+    public static Error CodeIsInvalid() =>
         Error.Validation(
-            "vlavke.seller.password.empty",
-            "Пароль обязателен",
-            "password");
-
-    public static Error PasswordIsTooShort() =>
-        Error.Validation(
-            "vlavke.seller.password.too_short",
-            "Пароль должен содержать минимум 6 символов",
-            "password");
+            "vdele.customer.code.invalid",
+            "Код должен содержать 6 цифр",
+            "code");
 
     public static Error FullNameIsEmpty() =>
         Error.Validation(

@@ -30,5 +30,9 @@
       <Folder Include="Repositories\ReferenceData\" />
     </ItemGroup>
     
+    <ItemGroup>
+      <Compile Remove="Migrations\20260506220438_Initial.cs" />
+    </ItemGroup>
+    
     
 </Project>

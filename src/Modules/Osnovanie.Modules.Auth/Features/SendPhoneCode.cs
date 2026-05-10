@@ -92,10 +92,13 @@ public class SendPhoneCodeHandler
         if (saveResult.IsFailure)
             return saveResult.Error.ToErrors();
 
-        await _smsSender.SendAsync(
+        var smsResult = await _smsSender.SendAsync(
             request.Phone,
-            $"Ваш код: {code}",
+            $"Код подтверждения OSNOVANIE: {code}. Никому не сообщайте код.",
             cancellationToken);
+
+        if (smsResult.IsFailure)
+            return smsResult.Error.ToErrors();
 
         return UnitResult.Success<Errors>();
     }

@@ -1,5 +1,7 @@
+using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Modules.Auth.Abstractions.Services;
+using Osnovanie.Shared;
 
 namespace Osnovanie.Infrastructure.Services.Auth;
 
@@ -12,12 +14,9 @@ public sealed class FakeSmsSender : ISmsSender
         _logger = logger;
     }
 
-    public Task SendAsync(
-        string phone,
-        string message,
-        CancellationToken cancellationToken = default)
+    public Task<UnitResult<Error>> SendAsync(string phone, string message, CancellationToken ct)
     {
-        _logger.LogInformation("FAKE SMS to {Phone}: {Message}", phone, message);
-        return Task.CompletedTask;
+        _logger.LogInformation("[FAKE SMS] {Phone}: {Message}", phone, message);
+        return Task.FromResult(UnitResult.Success<Error>());
     }
 }

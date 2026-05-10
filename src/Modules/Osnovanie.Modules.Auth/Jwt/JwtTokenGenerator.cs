@@ -20,14 +20,15 @@ public class JwtTokenGenerator : ITokenGenerator
         _options = options.Value;
     }
     //получение ролей тоже здесь будет
-    public Result<string, Errors> GenerateToken(User user)
+    public Result<string, Errors> GenerateToken(User user, string roleCode, string  applicationCode)
     {
         Claim[] claims = 
         [
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new (ClaimTypes.Email, user.Email ?? ""),
-            new ("email_verified", user.EmailConfirmed.ToString().ToLower()),
-            new (ClaimTypes.Name, user.UserName ?? "")
+            new (ClaimTypes.Name, user.UserName ?? ""),
+            new(ClaimTypes.Role, roleCode),
+            new("application", applicationCode)
         ];
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));

@@ -19,7 +19,7 @@ namespace Osnovanie.Modules.VLavke.Sellers.Features;
 
 public sealed record RegisterSellerByPhoneRequest(
     string Phone,
-    string Password,
+    string Code,
     string FullName,
     Guid MainCityId,
     string? Email);
@@ -32,13 +32,12 @@ public sealed class RegisterSellerByPhoneValidator
         RuleFor(x => x.Phone)
             .NotEmpty()
             .WithError(VLavkeSellerValidationErrors.PhoneIsEmpty());
-
-        RuleFor(x => x.Password)
+        
+        RuleFor(x => x.Code)
             .NotEmpty()
-            .WithError(VLavkeSellerValidationErrors.PasswordIsEmpty())
-            .MinimumLength(6)
-            .WithError(VLavkeSellerValidationErrors.PasswordIsTooShort());
-
+            .Matches(@"^\d{4}$")
+            .WithError(VLavkeSellerValidationErrors.CodeIsInvalid());
+        
         RuleFor(x => x.FullName)
             .NotEmpty()
             .WithError(VLavkeSellerValidationErrors.FullNameIsEmpty())
@@ -67,7 +66,7 @@ public sealed class RegisterSellerByPhoneEndpoint : IEndpoint
         {
             var result = await handler.Handle(request, cancellationToken);
 
-            return new EndpointResult<Guid>(result);
+            return new EndpointResult<string>(result);
         });
     }
 }
@@ -79,6 +78,7 @@ public sealed class RegisterSellerByPhoneHandler
     private readonly IVLavkeSellersReadDbContext _ivLavkeSellersReadDbContext;
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<RegisterSellerByPhoneRequest> _validator;
+    private readonly IAuthTokenService _authTokenService;
     private readonly ILogger<RegisterSellerByPhoneHandler> _logger;
 
     public RegisterSellerByPhoneHandler(
@@ -87,6 +87,7 @@ public sealed class RegisterSellerByPhoneHandler
         IVLavkeSellersReadDbContext ivLavkeSellersReadDbContext,
         ITransactionManager transactionManager,
         IValidator<RegisterSellerByPhoneRequest> validator,
+        IAuthTokenService authTokenService,
         ILogger<RegisterSellerByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
@@ -94,10 +95,11 @@ public sealed class RegisterSellerByPhoneHandler
         _ivLavkeSellersReadDbContext = ivLavkeSellersReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
+        _authTokenService = authTokenService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> Handle(
+    public async Task<Result<string, Errors>> Handle(
         RegisterSellerByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
@@ -122,7 +124,8 @@ public sealed class RegisterSellerByPhoneHandler
         var authResult = await _authRegistrationService.RegisterByPhone(
             new RegisterUserByPhoneCommand(
                 request.Phone,
-                request.Password,
+                request.Code,
+                null,
                 request.Email,
                 ApplicationCodes.VLavke,
                 RoleCodes.Seller),
@@ -179,6 +182,10 @@ public sealed class RegisterSellerByPhoneHandler
             "VLavke seller registered. UserId: {UserId}",
             userId);
 
-        return userId;
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        if (tokenResult.IsFailure)
+            return tokenResult.Error;
+
+        return tokenResult.Value;
     }
 }

@@ -48,12 +48,14 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
         if (existingUser is not null)
             return AuthErrors.UserAlreadyExists().ToErrors();
 
-        var verificationCode = await _phoneCodeRepository.GetLatestConfirmedByPhone(
-            command.Phone,
-            cancellationToken);
-
+        var verificationCode = await _phoneCodeRepository.GetLatestActiveByPhone(
+            command.Phone, cancellationToken);
         if (verificationCode is null)
-            return AuthErrors.PhoneVerificationCode.NotConfirmed().ToErrors();
+            return AuthErrors.PhoneVerificationCode.NotFound().ToErrors();
+
+        var confirmResult = verificationCode.Confirm(command.Code);
+        if (confirmResult.IsFailure)
+            return confirmResult.Error.ToErrors();
 
         var user = new User
         {
@@ -65,7 +67,9 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
             Email = string.IsNullOrWhiteSpace(command.Email) ? null : command.Email.Trim()
         };
 
-        var createUserResult = await _userManager.CreateAsync(user, command.Password);
+        var createUserResult = await _userManager.CreateAsync(
+            user, 
+            (string.IsNullOrWhiteSpace(command.Password) ? Guid.NewGuid().ToString().ToUpper() : command.Password));
 
         if (!createUserResult.Succeeded)
         {

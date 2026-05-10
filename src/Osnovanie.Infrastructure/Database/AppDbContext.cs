@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Infrastructure.Configurations.Auth;
+using Osnovanie.Modules.Auth.DataBase;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.ReferenceData.Cities.Domain;
 using Osnovanie.Modules.ReferenceData.Contracts;
@@ -18,6 +19,7 @@ using Osnovanie.Modules.VLavke.Sellers.Domain;
 namespace Osnovanie.Infrastructure.Database;
 
 public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>,
+    IAuthReadDbConnection,
     IReferenceDataReadDbContext,
     IVDeleCustomersReadDbContext,
     IVDeleSpecialistsReadDbContext,

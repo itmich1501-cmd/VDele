@@ -19,7 +19,7 @@ namespace Osnovanie.Modules.VDele.Customers.Features;
 
 public sealed record RegisterVDeleCustomerByPhoneRequest(
     string Phone,
-    string Password,
+    string Code,
     string FullName,
     Guid CityId,
     string? Email);
@@ -32,12 +32,11 @@ public sealed class RegisterVDeleCustomerByPhoneValidator
         RuleFor(x => x.Phone)
             .NotEmpty()
             .WithError(VDeleCustomerValidationErrors.PhoneIsEmpty());
-
-        RuleFor(x => x.Password)
+        
+        RuleFor(x => x.Code)
             .NotEmpty()
-            .WithError(VDeleCustomerValidationErrors.PasswordIsEmpty())
-            .MinimumLength(6)
-            .WithError(VDeleCustomerValidationErrors.PasswordIsTooShort());
+            .Matches(@"^\d{4}$")
+            .WithError(VDeleCustomerValidationErrors.CodeIsInvalid());
 
         RuleFor(x => x.FullName)
             .NotEmpty()
@@ -66,7 +65,7 @@ public sealed class RegisterVDeleCustomerByPhoneEndpoint : IEndpoint
         {
             var result = await handler.Handle(request, cancellationToken);
 
-            return new EndpointResult<Guid>(result);
+            return new EndpointResult<string>(result);
         });
     }
 }
@@ -78,6 +77,7 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
     private readonly IVDeleCustomersReadDbContext _ivDeleCustomersReadDbContext;
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<RegisterVDeleCustomerByPhoneRequest> _validator;
+    private readonly IAuthTokenService _authTokenService;
     private readonly ILogger<RegisterVDeleCustomerByPhoneHandler> _logger;
 
     public RegisterVDeleCustomerByPhoneHandler(
@@ -86,6 +86,7 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
         IVDeleCustomersReadDbContext ivDeleCustomersReadDbContext,
         ITransactionManager transactionManager,
         IValidator<RegisterVDeleCustomerByPhoneRequest> validator,
+        IAuthTokenService authTokenService,
         ILogger<RegisterVDeleCustomerByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
@@ -93,10 +94,11 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
         _ivDeleCustomersReadDbContext = ivDeleCustomersReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
+        _authTokenService = authTokenService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> Handle(
+    public async Task<Result<string, Errors>> Handle(
         RegisterVDeleCustomerByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
@@ -121,7 +123,8 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
         var authResult = await _authRegistrationService.RegisterByPhone(
             new RegisterUserByPhoneCommand(
                 request.Phone,
-                request.Password,
+                request.Code,
+                null,
                 request.Email,
                 ApplicationCodes.VDele,
                 RoleCodes.Customer),
@@ -177,7 +180,11 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
         _logger.LogInformation(
             "VDele customer registered. UserId: {UserId}",
             userId);
+        
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        if (tokenResult.IsFailure)
+            return tokenResult.Error;
 
-        return userId;
+        return tokenResult.Value;
     }
 }

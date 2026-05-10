@@ -75,7 +75,7 @@ public class LoginHandler
             return AuthErrors.InvalidCredentials().ToErrors();
         }
         
-        var jwtResult = _tokenGenerator.GenerateToken(user);
+        var jwtResult = _tokenGenerator.GenerateToken(user, "", "");
         if (jwtResult.IsFailure)
         {
             return jwtResult.Error;

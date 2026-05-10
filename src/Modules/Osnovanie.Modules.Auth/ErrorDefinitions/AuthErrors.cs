@@ -46,6 +46,9 @@ public static class AuthErrors
             "auth.registration.failed",
             "User registration failed");
     
+    public static Error SmsSendFailed() =>
+        Error.Failure("auth.sms.send_failed", "Не удалось отправить SMS");
+    
     public static class PhoneVerificationCode
     {
         public static Error NotConfirmed() =>

@@ -5,6 +5,7 @@ using Osnovanie.Infrastructure;
 using Osnovanie.Infrastructure.Configurations;
 using Osnovanie.Modules.Auth;
 using Osnovanie.Modules.Auth.Configuration;
+using Osnovanie.Modules.Auth.Services;
 using Osnovanie.Modules.ReferenceData;
 using Osnovanie.Modules.VDele;
 using Osnovanie.Modules.VLavke;
@@ -41,6 +42,12 @@ try
     var app = builder.Build();
 
     app.Configure();
+    
+    using (var scope = app.Services.CreateScope())
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<AdminSeeder>();
+        await seeder.SeedAsync();
+    }
 
     app.Run();
 }

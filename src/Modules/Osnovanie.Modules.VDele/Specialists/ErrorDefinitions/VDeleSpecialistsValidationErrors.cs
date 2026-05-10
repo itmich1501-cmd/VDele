@@ -2,7 +2,7 @@ using Osnovanie.Shared;
 
 namespace Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
 
-public static class SpecialistValidationErrors
+public static class VDeleSpecialistValidationErrors
 {
     public static Error PhoneIsEmpty() =>
         Error.Validation(
@@ -10,17 +10,11 @@ public static class SpecialistValidationErrors
             "Телефон обязателен",
             "phone");
 
-    public static Error PasswordIsEmpty() =>
+    public static Error CodeIsInvalid() =>
         Error.Validation(
-            "vdele.specialist.password.empty",
-            "Пароль обязателен",
-            "password");
-
-    public static Error PasswordIsTooShort() =>
-        Error.Validation(
-            "vdele.specialist.password.too_short",
-            "Пароль должен содержать минимум 6 символов",
-            "password");
+            "vdele.customer.code.invalid",
+            "Код должен содержать 6 цифр",
+            "code");
 
     public static Error FullNameIsEmpty() =>
         Error.Validation(

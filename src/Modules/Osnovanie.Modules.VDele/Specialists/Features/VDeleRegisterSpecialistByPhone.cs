@@ -8,8 +8,6 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Contracts;
-using Osnovanie.Modules.Auth.Services;
-using Osnovanie.Modules.VDele.Customers.Contracts;
 using Osnovanie.Modules.VDele.Specialists.Contracts;
 using Osnovanie.Modules.VDele.Specialists.Domain;
 using Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
@@ -21,96 +19,98 @@ namespace Osnovanie.Modules.VDele.Specialists.Features;
 
 public sealed record RegisterSpecialistByPhoneRequest(
     string Phone,
-    string Password,
+    string Code,
     string FullName,
     Guid CityId,
     string? Email,
     string? About);
 
-public sealed class RegisterSpecialistByPhoneValidator
+public sealed class VDeleRegisterSpecialistByPhoneValidator
     : AbstractValidator<RegisterSpecialistByPhoneRequest>
 {
-    public RegisterSpecialistByPhoneValidator()
+    public VDeleRegisterSpecialistByPhoneValidator()
     {
         RuleFor(x => x.Phone)
             .NotEmpty()
-            .WithError(SpecialistValidationErrors.PhoneIsEmpty());
-
-        RuleFor(x => x.Password)
+            .WithError(VDeleSpecialistValidationErrors.PhoneIsEmpty());
+        
+        RuleFor(x => x.Code)
             .NotEmpty()
-            .WithError(SpecialistValidationErrors.PasswordIsEmpty())
-            .MinimumLength(6)
-            .WithError(SpecialistValidationErrors.PasswordIsTooShort());
-
+            .Matches(@"^\d{4}$")
+            .WithError(VDeleSpecialistValidationErrors.CodeIsInvalid());
+        
         RuleFor(x => x.FullName)
             .NotEmpty()
-            .WithError(SpecialistValidationErrors.FullNameIsEmpty())
+            .WithError(VDeleSpecialistValidationErrors.FullNameIsEmpty())
             .MaximumLength(200)
-            .WithError(SpecialistValidationErrors.FullNameIsTooLong());
+            .WithError(VDeleSpecialistValidationErrors.FullNameIsTooLong());
 
         RuleFor(x => x.CityId)
             .NotEmpty()
-            .WithError(SpecialistValidationErrors.CityIdIsEmpty());
+            .WithError(VDeleSpecialistValidationErrors.CityIdIsEmpty());
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .When(x => !string.IsNullOrWhiteSpace(x.Email))
-            .WithError(SpecialistValidationErrors.EmailIsInvalid());
+            .WithError(VDeleSpecialistValidationErrors.EmailIsInvalid());
 
         RuleFor(x => x.About)
             .MaximumLength(2000)
             .When(x => !string.IsNullOrWhiteSpace(x.About))
-            .WithError(SpecialistValidationErrors.AboutIsTooLong());
+            .WithError(VDeleSpecialistValidationErrors.AboutIsTooLong());
     }
 }
 
-public sealed class RegisterSpecialistByPhoneEndpoint : IEndpoint
+public sealed class VDeleRegisterSpecialistByPhoneEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("vdele/specialists/register-by-phone", async (
-            [FromServices] RegisterVDeleSpecialistByPhoneHandler handler,
+            [FromServices] VDeleRegisterVDeleSpecialistByPhoneHandler handler,
             [FromBody] RegisterSpecialistByPhoneRequest request,
             CancellationToken cancellationToken) =>
         {
             var result = await handler.Handle(request, cancellationToken);
 
-            return new EndpointResult<Guid>(result);
+            return new EndpointResult<string>(result);
         });
     }
 }
 
-public sealed class RegisterVDeleSpecialistByPhoneHandler
+public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
 {
     private readonly IAuthRegistrationService _authRegistrationService;
     private readonly IVDeleSpecialistProfileRepository _profileRepository;
     private readonly IVDeleSpecialistsReadDbContext _ivDeleSpecialistsReadDbContext;
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<RegisterSpecialistByPhoneRequest> _validator;
-    private readonly ILogger<RegisterVDeleSpecialistByPhoneHandler> _logger;
+    private readonly IAuthTokenService _authTokenService;
+    private readonly ILogger<VDeleRegisterVDeleSpecialistByPhoneHandler> _logger;
 
-    public RegisterVDeleSpecialistByPhoneHandler(
+    public VDeleRegisterVDeleSpecialistByPhoneHandler(
         IAuthRegistrationService authRegistrationService,
         IVDeleSpecialistProfileRepository profileRepository,
         IVDeleSpecialistsReadDbContext ivDeleSpecialistsReadDbContext,
         ITransactionManager transactionManager,
         IValidator<RegisterSpecialistByPhoneRequest> validator,
-        ILogger<RegisterVDeleSpecialistByPhoneHandler> logger)
+        IAuthTokenService authTokenService,
+        ILogger<VDeleRegisterVDeleSpecialistByPhoneHandler> logger)
     {
         _authRegistrationService = authRegistrationService;
         _profileRepository = profileRepository;
         _ivDeleSpecialistsReadDbContext = ivDeleSpecialistsReadDbContext;
         _transactionManager = transactionManager;
         _validator = validator;
+        _authTokenService = authTokenService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Errors>> Handle(
+    public async Task<Result<string, Errors>> Handle(
         RegisterSpecialistByPhoneRequest? request,
         CancellationToken cancellationToken)
     {
         if (request is null)
-            return SpecialistValidationErrors.RequestIsEmpty().ToErrors();
+            return VDeleSpecialistValidationErrors.RequestIsEmpty().ToErrors();
 
         var validationResult = await _validator.ValidateAsync(
             request,
@@ -130,7 +130,8 @@ public sealed class RegisterVDeleSpecialistByPhoneHandler
         var authResult = await _authRegistrationService.RegisterByPhone(
             new RegisterUserByPhoneCommand(
                 request.Phone,
-                request.Password,
+                request.Code,
+                null,
                 request.Email,
                 ApplicationCodes.VDele,
                 RoleCodes.Specialist),
@@ -188,6 +189,10 @@ public sealed class RegisterVDeleSpecialistByPhoneHandler
             "VDele specialist registered. UserId: {UserId}",
             userId);
 
-        return userId;
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        if (tokenResult.IsFailure)
+            return tokenResult.Error;
+
+        return tokenResult.Value;
     }
 }

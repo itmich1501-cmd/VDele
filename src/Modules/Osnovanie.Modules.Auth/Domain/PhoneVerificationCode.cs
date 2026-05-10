@@ -112,7 +112,7 @@ public class PhoneVerificationCode
     private static string GenerateCode()
     {
         return RandomNumberGenerator
-            .GetInt32(100000, 999999)
+            .GetInt32(1000, 9999)
             .ToString();
     }
 
