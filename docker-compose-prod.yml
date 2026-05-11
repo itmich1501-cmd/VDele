@@ -1,0 +1,81 @@
+# Production docker-compose для VDele API
+#
+# Запуск: docker compose -f docker-compose-prod.yml up -d
+# Остановка: docker compose -f docker-compose-prod.yml down
+# Логи: docker compose -f docker-compose-prod.yml logs -f osnovanie-api
+#
+# Перед запуском создай файл .env рядом с этим файлом (см. .env.example)
+
+services:
+  postgres:
+    container_name: vdele-postgres
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # В проде порт наружу НЕ публикуем — БД доступна только внутри docker сети.
+    # Это закрывает целый класс атак: никто извне не может подключиться к БД даже зная пароль.
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vdele-network
+    # Healthcheck — Docker понимает что БД готова принимать подключения.
+    # Без этого API может стартовать раньше БД и упасть.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  osnovanie-api:
+    container_name: vdele-api
+    build:
+      context: .
+      dockerfile: src/Osnovanie.Api/Dockerfile
+    restart: always
+    # API слушает на 9001 внутри контейнера, наружу публикуем тоже 9001.
+    # Если перед API будет nginx (рекомендую) — порт наружу можно убрать,
+    # nginx будет общаться с API через внутреннюю docker сеть.
+    ports:
+      - "9001:9001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:9001
+      # Connection string собирается из переменных — пароль не светится в файле
+      - ConnectionStrings__Database=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      # JWT секрет — генерируется один раз, хранится только в .env на сервере
+      - Auth__Jwt__SecretKey=${JWT_SECRET}
+      - Auth__Jwt__TokenLifeTimeInMinutes=43200
+      - Auth__Jwt__Issuer=osnovanie-api
+      # SmsInt — токен из личного кабинета smsint.ru
+      - SmsInt__Token=${SMSINT_TOKEN}
+      # Пароли админов сидера
+      - AdminSeed__Admins__0__Username=vdele_admin
+      - AdminSeed__Admins__0__Password=${ADMIN_VDELE_PASS}
+      - AdminSeed__Admins__0__ApplicationCode=vdele
+      - AdminSeed__Admins__0__RoleCode=admin
+      - AdminSeed__Admins__1__Username=vlavke_admin
+      - AdminSeed__Admins__1__Password=${ADMIN_VLAVKE_PASS}
+      - AdminSeed__Admins__1__ApplicationCode=vlavke
+      - AdminSeed__Admins__1__RoleCode=admin
+    # API стартует только после того как postgres прошёл healthcheck
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - vdele-network
+
+# Отдельная сеть — изоляция от других compose проектов на сервере.
+# Сервисы внутри общаются по именам контейнеров (postgres, osnovanie-api).
+networks:
+  vdele-network:
+    driver: bridge
+
+# Volume для данных БД — переживает пересоздание контейнера.
+# Данные физически лежат в /var/lib/docker/volumes/ на сервере.
+volumes:
+  postgres_data:

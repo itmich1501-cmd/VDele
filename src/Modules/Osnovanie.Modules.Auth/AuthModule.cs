@@ -30,9 +30,7 @@ public static class AuthModule
             configuration.GetSection(AdminSeedOptions.SECTION_NAME));
 
         services.AddScoped<AdminSeeder>();
-
-        services.AddScoped<VerifyEmailHandler>();
-        services.AddScoped<LoginHandler>();
+        
         services.AddScoped<SendPhoneCodeHandler>();
         services.AddScoped<VerifyPhoneCodeHandler>();
         

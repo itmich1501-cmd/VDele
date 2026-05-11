@@ -6,7 +6,7 @@ public class JwtOptions
     
     public string SecretKey { get; init; } = string.Empty;
     
-    public int TokenLifeTimeInMinutes { get; init; }
+    public int TokenLifetimeMinutes { get; init; }
     
     public string Issuer { get; init; } = string.Empty; 
 }

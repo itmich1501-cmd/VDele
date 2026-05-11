@@ -24,9 +24,9 @@ try
     
     string enviroment = builder.Environment.EnvironmentName;
     
-    builder.Configuration.AddJsonFile($"appsettings.{enviroment}.json", true, true);
-
-    builder.Configuration.AddEnvironmentVariables();
+    // builder.Configuration.AddJsonFile($"appsettings.{enviroment}.json", true, true);
+    //
+    // builder.Configuration.AddEnvironmentVariables();
 
     builder.Services.AddApiConfiguration(builder.Configuration);
 
