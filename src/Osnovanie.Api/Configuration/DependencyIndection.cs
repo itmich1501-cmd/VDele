@@ -10,7 +10,8 @@ public static class DependencyIndection
     {
         services
             .AddSerilogLogging(configuration)
-            .AddOpenApiSpec();
+            .AddOpenApiSpec()
+            .AddCors();
 
         return services;
     }
@@ -21,6 +22,17 @@ public static class DependencyIndection
 
         // если используешь SwaggerGen:
         // services.AddSwaggerGen(...);
+
+        return services;
+    }private static IServiceCollection AddCors(this IServiceCollection services)
+    {
+        services.AddCors(options => {
+            options.AddDefaultPolicy(p =>
+                p.WithOrigins("https://vdele.online")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
+        });
 
         return services;
     }
