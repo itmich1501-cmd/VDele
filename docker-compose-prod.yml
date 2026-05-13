@@ -106,6 +106,8 @@ services:
 networks:
   vdele-network:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1450"
 
 # Volume для данных БД — переживает пересоздание контейнера.
 # Данные физически лежат в /var/lib/docker/volumes/ на сервере.
