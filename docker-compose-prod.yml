@@ -62,6 +62,9 @@ services:
       - AdminSeed__Admins__1__Password=${ADMIN_VLAVKE_PASS}
       - AdminSeed__Admins__1__ApplicationCode=vlavke
       - AdminSeed__Admins__1__RoleCode=admin
+      - Auth__PhoneVerification__TestPhones__0=${TEST_PHONE_1}
+      - Auth__PhoneVerification__TestPhones__1=${TEST_PHONE_2}
+      - Auth__PhoneVerification__TestPhoneFixedCode=${TEST_PHONE_CODE}
     # API стартует только после того как postgres прошёл healthcheck
     depends_on:
       postgres:

@@ -62,6 +62,28 @@ public class PhoneVerificationCode
 
         return (entity, code);
     }
+    
+    public static Result<PhoneVerificationCode, Error> CreateWithCode(
+        string phone,
+        string code,
+        TimeSpan lifetime)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return AuthErrors.PhoneVerificationCode.PhoneRequired();
+
+        if (lifetime <= TimeSpan.Zero)
+            return AuthErrors.PhoneVerificationCode.InvalidLifetime();
+
+        if (string.IsNullOrWhiteSpace(code))
+            return AuthErrors.PhoneVerificationCode.InvalidCode();
+
+        var hash = Hash(code);
+
+        return new PhoneVerificationCode(
+            phone,
+            hash,
+            DateTime.UtcNow.Add(lifetime));
+    }
 
     public UnitResult<Error> Verify(string code)
     {

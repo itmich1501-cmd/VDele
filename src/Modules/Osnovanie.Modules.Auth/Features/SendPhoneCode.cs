@@ -75,30 +75,50 @@ public class SendPhoneCodeHandler
         if (!validationResult.IsValid)
             return validationResult.ToErrors();
 
-        var codeResult = PhoneVerificationCode.Create(
-            request.Phone,
-            TimeSpan.FromSeconds(_options.CodeLifetimeSeconds));
+        var isTestPhone = _options.TestPhones.Contains(request.Phone);
 
-        if (codeResult.IsFailure)
-            return codeResult.Error.ToErrors();
+        PhoneVerificationCode entity;
 
-        var entity = codeResult.Value.Entity;
-        var code = codeResult.Value.Code;
+        if (isTestPhone)
+        {
+            var testCodeResult = PhoneVerificationCode.CreateWithCode(
+                request.Phone,
+                _options.TestPhoneFixedCode,
+                TimeSpan.FromSeconds(_options.CodeLifetimeSeconds));
 
+            if (testCodeResult.IsFailure)
+                return testCodeResult.Error.ToErrors();
+
+            entity = testCodeResult.Value;
+        }
+        else
+        {
+            var codeResult = PhoneVerificationCode.Create(
+                request.Phone,
+                TimeSpan.FromSeconds(_options.CodeLifetimeSeconds));
+
+            if (codeResult.IsFailure)
+                return codeResult.Error.ToErrors();
+
+            entity = codeResult.Value.Entity;
+
+            await _repository.Add(entity, cancellationToken);
+            await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            var smsResult = await _smsSender.SendAsync(
+                request.Phone,
+                $"Код подтверждения OSNOVANIE: {codeResult.Value.Code}. Никому не сообщайте код.",
+                cancellationToken);
+
+            if (smsResult.IsFailure)
+                return smsResult.Error.ToErrors();
+
+            return UnitResult.Success<Errors>();
+        }
+
+        // Для тестовых номеров — только записать в БД, БЕЗ SMS
         await _repository.Add(entity, cancellationToken);
-
-        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
-
-        if (saveResult.IsFailure)
-            return saveResult.Error.ToErrors();
-
-        var smsResult = await _smsSender.SendAsync(
-            request.Phone,
-            $"Код подтверждения OSNOVANIE: {code}. Никому не сообщайте код.",
-            cancellationToken);
-
-        if (smsResult.IsFailure)
-            return smsResult.Error.ToErrors();
+        await _transactionManager.SaveChangesAsync(cancellationToken);
 
         return UnitResult.Success<Errors>();
     }
