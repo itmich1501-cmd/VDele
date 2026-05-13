@@ -85,6 +85,21 @@ services:
     mem_limit: 128m
     networks:
       - vdele-network
+    
+  seq:
+    container_name: vdele-seq
+    image: datalust/seq:latest
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+    ports:
+      - "127.0.0.1:8081:80"
+      - "127.0.0.1:5341:5341"
+    volumes:
+      - seq_data:/data
+    networks:
+      - vdele-network
 
 # Отдельная сеть — изоляция от других compose проектов на сервере.
 # Сервисы внутри общаются по именам контейнеров (postgres, osnovanie-api).
@@ -96,3 +111,4 @@ networks:
 # Данные физически лежат в /var/lib/docker/volumes/ на сервере.
 volumes:
   postgres_data:
+  seq_data:
