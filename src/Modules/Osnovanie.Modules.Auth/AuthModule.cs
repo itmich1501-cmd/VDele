@@ -59,6 +59,7 @@ public static class AuthModule
         
         services.AddScoped<SendPhoneCodeHandler>();
         services.AddScoped<VerifyPhoneCodeHandler>();
+        services.AddScoped<CheckPhoneExistsHandler>();
         
         services.AddScoped<AuthRegistrationService>();
         
