@@ -7,10 +7,14 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Osnovanie.Api/Osnovanie.Api.csproj", "src/Osnovanie.Api/"]
-COPY ["src/Modules/Osnovanie.Modules.Auth/Osnovanie.Modules.Auth.csproj", "src/Modules/Osnovanie.Modules.Auth/"]
 COPY ["src/Osnovanie.Framework/Osnovanie.Framework.csproj", "src/Osnovanie.Framework/"]
 COPY ["src/Osnovanie.Shared/Osnovanie.Shared.csproj", "src/Osnovanie.Shared/"]
 COPY ["src/Osnovanie.Infrastructure/Osnovanie.Infrastructure.csproj", "src/Osnovanie.Infrastructure/"]
+COPY ["src/Modules/Osnovanie.Modules.Auth/Osnovanie.Modules.Auth.csproj", "src/Modules/Osnovanie.Modules.Auth/"]
+COPY ["src/Modules/Osnovanie.Modules.Auth.Contracts/Osnovanie.Modules.Auth.Contracts.csproj", "src/Modules/Osnovanie.Modules.Auth.Contracts/"]
+COPY ["src/Modules/Osnovanie.Modules.ReferenceData/Osnovanie.Modules.ReferenceData.csproj", "src/Modules/Osnovanie.Modules.ReferenceData/"]
+COPY ["src/Modules/Osnovanie.Modules.VDele/Osnovanie.Modules.VDele.csproj", "src/Modules/Osnovanie.Modules.VDele/"]
+COPY ["src/Modules/Osnovanie.Modules.VLavke/Osnovanie.Modules.VLavke.csproj", "src/Modules/Osnovanie.Modules.VLavke/"]
 
 #COPY ["Directory.Build.props", "./"]
 COPY ["Directory.Packages.props", "./"]

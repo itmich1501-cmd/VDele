@@ -37,6 +37,25 @@ services:
       - ASPNETCORE_URLS=http://+:9001
     env_file:
       - osnovanie.service.env
+    
+  nginx:
+    image: nginx:alpine
+    container_name: setu-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Прод-конфиг отличается от dev: HTTPS, реальный домен, два server-блока.
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Сертификаты от Let's Encrypt — bind-mount папки
+      # Путь /etc/letsencrypt появляется после `apt inst...
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - auth-service
+    restart: always
+    mem_limit: 128m
+
 
 volumes:
   postgres_data:

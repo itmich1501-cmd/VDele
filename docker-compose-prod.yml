@@ -48,9 +48,9 @@ services:
       # Connection string собирается из переменных — пароль не светится в файле
       - ConnectionStrings__Database=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       # JWT секрет — генерируется один раз, хранится только в .env на сервере
-      - Auth__Jwt__SecretKey=${JWT_SECRET}
-      - Auth__Jwt__TokenLifeTimeInMinutes=43200
-      - Auth__Jwt__Issuer=osnovanie-api
+      - JwtOptions__SecretKey=${JWT_SECRET}
+      - JwtOptions__TokenLifetimeMinutes=43200
+      - JwtOptions__Issuer=osnovanie-api
       # SmsInt — токен из личного кабинета smsint.ru
       - SmsInt__Token=${SMSINT_TOKEN}
       # Пароли админов сидера
@@ -68,6 +68,24 @@ services:
         condition: service_healthy
     networks:
       - vdele-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: setu-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Прод-конфиг отличается от dev: HTTPS, реальный домен, два server-блока.
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      # Сертификаты от Let's Encrypt — bind-mount папки
+      # Путь /etc/letsencrypt появляется после `apt inst...
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - auth-service
+    restart: always
+    mem_limit: 128m
 
 # Отдельная сеть — изоляция от других compose проектов на сервере.
 # Сервисы внутри общаются по именам контейнеров (postgres, osnovanie-api).

@@ -1,8 +1,10 @@
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using Osnovanie.Api.Configuration;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Infrastructure;
 using Osnovanie.Infrastructure.Configurations;
+using Osnovanie.Infrastructure.Database;
 using Osnovanie.Modules.Auth;
 using Osnovanie.Modules.Auth.Configuration;
 using Osnovanie.Modules.Auth.Services;
@@ -37,7 +39,7 @@ try
     builder.Services.AddVDeleModule();
     builder.Services.AddVLavkeModule();
     
-    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
     
     var app = builder.Build();
 
@@ -45,6 +47,9 @@ try
     
     using (var scope = app.Services.CreateScope())
     {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.MigrateAsync();
+        
         var seeder = scope.ServiceProvider.GetRequiredService<AdminSeeder>();
         await seeder.SeedAsync();
     }

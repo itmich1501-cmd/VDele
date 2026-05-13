@@ -12,7 +12,10 @@ public static class AppExtensions
         app.UseRequestCorrelationId();
         app.UseExceptionMiddleware();
         app.UseSerilogRequestLogging();
-
+        app.UseCors();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        
         app.MapOpenApi();
 
         app.UseSwaggerUI(options =>
