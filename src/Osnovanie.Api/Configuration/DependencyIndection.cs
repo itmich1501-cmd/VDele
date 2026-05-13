@@ -28,7 +28,8 @@ public static class DependencyIndection
     {
         services.AddCors(options => {
             options.AddDefaultPolicy(p =>
-                p.WithOrigins("https://api.vdele.online", "https://vdele.online", "https://vlavke.online", "https://www.vlavke.online", "https://www.vdele.online")
+                p.WithOrigins("https://api.vdele.online", "https://vdele.online", "https://vlavke.online", "https://www.vlavke.online", "https://www.vdele.online",
+                        "http://localhost:5173", "http://localhost:5174")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());
