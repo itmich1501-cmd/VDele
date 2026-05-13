@@ -40,8 +40,8 @@ services:
     # API слушает на 9001 внутри контейнера, наружу публикуем тоже 9001.
     # Если перед API будет nginx (рекомендую) — порт наружу можно убрать,
     # nginx будет общаться с API через внутреннюю docker сеть.
-    ports:
-      - "9001:9001"
+    expose:
+      - "9001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:9001
@@ -71,21 +71,20 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: setu-nginx
+    container_name: vdele-nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      # Прод-конфиг отличается от dev: HTTPS, реальный домен, два server-блока.
       - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
-      # Сертификаты от Let's Encrypt — bind-mount папки
-      # Путь /etc/letsencrypt появляется после `apt inst...
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
     depends_on:
-      - frontend
-      - auth-service
+      - osnovanie-api
     restart: always
     mem_limit: 128m
+    networks:
+      - vdele-network
 
 # Отдельная сеть — изоляция от других compose проектов на сервере.
 # Сервисы внутри общаются по именам контейнеров (postgres, osnovanie-api).
