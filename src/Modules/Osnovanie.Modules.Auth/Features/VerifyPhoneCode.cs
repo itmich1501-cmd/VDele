@@ -25,7 +25,7 @@ public class VerifyPhoneCodeRequestValidator
 
         RuleFor(x => x.Code)
             .NotEmpty()
-            .Matches(@"^\d{6}$")
+            .Matches(@"^\d{4}$")
             .WithMessage("Code must contain exactly 6 digits");
     }
 }
