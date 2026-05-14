@@ -39,17 +39,4 @@ public class PhoneVerificationCodeRepository : IPhoneVerificationCodeRepository
             .FirstOrDefaultAsync(ct);
     }
     
-    public async Task<PhoneVerificationCode?> GetLatestConfirmedByPhone(
-        string phone,
-        CancellationToken ct)
-    {
-        return await _dbContext.PhoneVerificationCodes
-            .Where(x =>
-                x.Phone == phone &&
-                x.IsConfirmed &&
-                !x.IsUsed &&
-                x.ExpiresAtUtc > DateTime.UtcNow)
-            .OrderByDescending(x => x.CreatedAtUtc)
-            .FirstOrDefaultAsync(ct);
-    }
 }

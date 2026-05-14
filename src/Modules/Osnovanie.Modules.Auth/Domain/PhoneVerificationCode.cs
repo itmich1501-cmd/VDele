@@ -134,7 +134,7 @@ public class PhoneVerificationCode
     private static string GenerateCode()
     {
         return RandomNumberGenerator
-            .GetInt32(1000, 9999)
+            .GetInt32(1000, 10000)
             .ToString();
     }
 

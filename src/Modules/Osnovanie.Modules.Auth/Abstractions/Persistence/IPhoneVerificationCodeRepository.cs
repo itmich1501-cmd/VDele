@@ -9,8 +9,4 @@ public interface IPhoneVerificationCodeRepository
     Task<PhoneVerificationCode?> GetLatestActiveByPhone(
         string phone,
         CancellationToken ct);
-    
-    Task<PhoneVerificationCode?> GetLatestConfirmedByPhone(
-        string phone,
-        CancellationToken ct);
 }

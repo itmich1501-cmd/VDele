@@ -102,9 +102,6 @@ public class SendPhoneCodeHandler
 
             entity = codeResult.Value.Entity;
 
-            await _repository.Add(entity, cancellationToken);
-            await _transactionManager.SaveChangesAsync(cancellationToken);
-
             var smsResult = await _smsSender.SendAsync(
                 request.Phone,
                 $"Код подтверждения OSNOVANIE: {codeResult.Value.Code}. Никому не сообщайте код.",
@@ -112,6 +109,9 @@ public class SendPhoneCodeHandler
 
             if (smsResult.IsFailure)
                 return smsResult.Error.ToErrors();
+
+            await _repository.Add(entity, cancellationToken);
+            await _transactionManager.SaveChangesAsync(cancellationToken);
 
             return UnitResult.Success<Errors>();
         }

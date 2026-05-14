@@ -12,7 +12,7 @@ using Osnovanie.Infrastructure.Database;
 namespace Osnovanie.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260510051704_Initial")]
+    [Migration("20260514022603_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

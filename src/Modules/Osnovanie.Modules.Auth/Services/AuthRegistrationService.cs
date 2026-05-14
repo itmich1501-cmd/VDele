@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Osnovanie.Modules.Auth.Abstractions.Persistence;
 using Osnovanie.Modules.Auth.Contracts;
+using Osnovanie.Modules.Auth.DataBase;
 using Osnovanie.Modules.Auth.Domain;
 using Osnovanie.Modules.Auth.ErrorDefinitions;
 using Osnovanie.Shared;
@@ -11,30 +12,25 @@ using Osnovanie.Shared.DataBase;
 
 namespace Osnovanie.Modules.Auth.Services;
 
-public sealed record PhoneRegistrationCommand(
-    string Phone,
-    string Password,
-    string FirstName,
-    string ApplicationCode,
-    string RoleCode,
-    Guid CityId);
-
 public sealed class AuthRegistrationService : IAuthRegistrationService
 {
     private readonly UserManager<User> _userManager;
     private readonly IPhoneVerificationCodeRepository _phoneCodeRepository;
     private readonly IUserAccessRepository _userAccessRepository;
+    private readonly IAuthReadDbConnection _readDb;
     private readonly ILogger<AuthRegistrationService> _logger;
 
     public AuthRegistrationService(
         UserManager<User> userManager,
         IPhoneVerificationCodeRepository phoneCodeRepository,
         IUserAccessRepository userAccessRepository,
+        IAuthReadDbConnection readDb,
         ILogger<AuthRegistrationService> logger)
     {
         _userManager = userManager;
         _phoneCodeRepository = phoneCodeRepository;
         _userAccessRepository = userAccessRepository;
+        _readDb = readDb;
         _logger = logger;
     }
 
@@ -42,12 +38,6 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
         RegisterUserByPhoneCommand command,
         CancellationToken cancellationToken)
     {
-        var existingUser = await _userManager.Users
-            .FirstOrDefaultAsync(x => x.PhoneNumber == command.Phone, cancellationToken);
-
-        if (existingUser is not null)
-            return AuthErrors.UserAlreadyExists().ToErrors();
-
         var verificationCode = await _phoneCodeRepository.GetLatestActiveByPhone(
             command.Phone, cancellationToken);
         if (verificationCode is null)
@@ -57,29 +47,48 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
         if (confirmResult.IsFailure)
             return confirmResult.Error.ToErrors();
 
-        var user = new User
+        var existingUser = await _userManager.Users
+            .FirstOrDefaultAsync(x => x.PhoneNumber == command.Phone, cancellationToken);
+
+        User user;
+        if (existingUser is null)
         {
-            Id = Guid.NewGuid(),
-            UserName = command.Phone,
-            NormalizedUserName = command.Phone.ToUpperInvariant(),
-            PhoneNumber = command.Phone,
-            PhoneNumberConfirmed = true,
-            Email = string.IsNullOrWhiteSpace(command.Email) ? null : command.Email.Trim()
-        };
+            user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = command.Phone,
+                NormalizedUserName = command.Phone.ToUpperInvariant(),
+                PhoneNumber = command.Phone,
+                PhoneNumberConfirmed = true,
+                Email = string.IsNullOrWhiteSpace(command.Email) ? null : command.Email.Trim()
+            };
 
-        var createUserResult = await _userManager.CreateAsync(
-            user, 
-            (string.IsNullOrWhiteSpace(command.Password) ? Guid.NewGuid().ToString().ToUpper() : command.Password));
+            var createUserResult = await _userManager.CreateAsync(
+                user,
+                string.IsNullOrWhiteSpace(command.Password) ? Guid.NewGuid().ToString().ToUpper() : command.Password);
 
-        if (!createUserResult.Succeeded)
-        {
-            _logger.LogWarning(
-                "Failed to register user by phone {Phone}. Errors: {Errors}",
-                command.Phone,
-                string.Join(", ", createUserResult.Errors.Select(x => x.Description)));
+            if (!createUserResult.Succeeded)
+            {
+                _logger.LogWarning(
+                    "Failed to register user by phone {Phone}. Errors: {Errors}",
+                    command.Phone,
+                    string.Join(", ", createUserResult.Errors.Select(x => x.Description)));
 
-            return AuthErrors.RegistrationFailed().ToErrors();
+                return AuthErrors.RegistrationFailed().ToErrors();
+            }
         }
+        else
+        {
+            user = existingUser;
+        }
+
+        var accessExists = await _readDb.UserAccessesRead
+            .AnyAsync(x => x.UserId == user.Id
+                        && x.ApplicationCode == command.ApplicationCode
+                        && x.RoleCode == command.RoleCode, cancellationToken);
+
+        if (accessExists)
+            return AuthErrors.UserAlreadyExists().ToErrors();
 
         var userAccessResult = UserAccess.Create(
             user.Id,
@@ -89,12 +98,9 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
         if (userAccessResult.IsFailure)
             return userAccessResult.Error!.ToErrors();
 
-        await _userAccessRepository.Add(
-            userAccessResult.Value!,
-            cancellationToken);
+        await _userAccessRepository.Add(userAccessResult.Value!, cancellationToken);
 
         var markAsUsedResult = verificationCode.MarkAsUsed();
-
         if (markAsUsedResult.IsFailure)
             return markAsUsedResult.Error!.ToErrors();
 
