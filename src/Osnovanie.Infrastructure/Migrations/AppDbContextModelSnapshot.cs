@@ -486,11 +486,13 @@ namespace Osnovanie.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -498,9 +500,17 @@ namespace Osnovanie.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_customer_profiles1");
 
-                    b.ToTable("VLavkeCustomerProfiles");
+                    b.HasIndex("CityId")
+                        .HasDatabaseName("IX_customer_profiles_CityId1");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_customer_profiles_UserId1");
+
+                    b.ToTable("customer_profiles", "vlavke");
                 });
 
             modelBuilder.Entity("Osnovanie.Modules.VLavke.Sellers.Domain.VLavkeSellerProfile", b =>
