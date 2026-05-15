@@ -128,7 +128,7 @@ public sealed class RegisterSellerByPhoneHandler
                 null,
                 request.Email,
                 ApplicationCodes.VLavke,
-                RoleCodes.Seller),
+                new[] { RoleCodes.Seller }),
             cancellationToken);
 
         if (authResult.IsFailure)
@@ -182,7 +182,7 @@ public sealed class RegisterSellerByPhoneHandler
             "VLavke seller registered. UserId: {UserId}",
             userId);
 
-        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, ApplicationCodes.VLavke, cancellationToken);
         if (tokenResult.IsFailure)
             return tokenResult.Error;
 

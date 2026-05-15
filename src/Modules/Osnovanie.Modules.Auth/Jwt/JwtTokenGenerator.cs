@@ -20,16 +20,19 @@ public class JwtTokenGenerator : ITokenGenerator
         _options = options.Value;
     }
     //получение ролей тоже здесь будет
-    public Result<string, Errors> GenerateToken(User user, string roleCode, string  applicationCode)
+    public Result<string, Errors> GenerateToken(User user, IReadOnlyList<string> roleCodes, string  applicationCode)
     {
-        Claim[] claims = 
-        [
-            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new (ClaimTypes.Email, user.Email ?? ""),
-            new (ClaimTypes.Name, user.UserName ?? ""),
-            new(ClaimTypes.Role, roleCode),
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email ?? ""),
+            new(ClaimTypes.Name, user.UserName ?? ""),
             new("application", applicationCode)
-        ];
+        };
+        
+        foreach (var role in roleCodes)
+            claims.Add(new Claim(ClaimTypes.Role, role));
+
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
 

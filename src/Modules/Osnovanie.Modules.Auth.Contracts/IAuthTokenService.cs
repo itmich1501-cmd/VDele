@@ -5,5 +5,5 @@ namespace Osnovanie.Modules.Auth.Contracts;
 
 public interface IAuthTokenService
 {
-    Task<Result<string, Errors>> GenerateTokenForUser(Guid userId, CancellationToken ct);
+    Task<Result<string, Errors>> GenerateTokenForUser(Guid userId, string applicationCode, CancellationToken ct);
 }

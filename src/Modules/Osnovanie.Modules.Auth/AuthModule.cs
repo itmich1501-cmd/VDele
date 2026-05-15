@@ -65,6 +65,7 @@ public static class AuthModule
         services.AddScoped<IAuthRegistrationService, AuthRegistrationService>();
         services.AddScoped<IAuthTokenService, AuthTokenService>();
         services.AddScoped<IAuthLoginService, AuthLoginService>();
+        services.AddScoped<IAuthUserQueryService, AuthUserQueryService>();
         
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
         

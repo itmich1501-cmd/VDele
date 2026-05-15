@@ -5,13 +5,12 @@ namespace Osnovanie.Modules.Auth.Contracts;
 
 public interface IAuthLoginService
 {
-    Task<Result<string, Errors>> LoginByPhone(
+    Task<Result<string, Errors>> LoginByPhoneAnyRole(
         string phone,
         string code,
         string applicationCode,
-        string roleCode,
         CancellationToken cancellationToken);
-    
+
     Task<Result<string, Errors>> LoginByUsername(
         string username,
         string password,

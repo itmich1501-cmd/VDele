@@ -18,11 +18,6 @@ public static class AuthErrors
         Error.NotFound(
             "auth.user.not_found_by_phone",
             "Пользователь с таким телефоном не найден");
-
-    public static Error NoAccessForRole() =>
-        Error.NotFound(
-            "auth.user.no_access_for_role",
-            "Пользователь не зарегистрирован в этой роли");
     
     public static Error InvalidCredentials() =>
         Error.Authentication(

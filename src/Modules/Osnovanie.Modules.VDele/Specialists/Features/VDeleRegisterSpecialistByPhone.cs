@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Osnovanie.Framework.EndpointResult;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.Auth.Contracts;
+using Osnovanie.Modules.VDele.Customers.Contracts;
+using Osnovanie.Modules.VDele.Customers.Domain;
 using Osnovanie.Modules.VDele.Specialists.Contracts;
 using Osnovanie.Modules.VDele.Specialists.Domain;
 using Osnovanie.Modules.VDele.Specialists.ErrorDefinitions;
@@ -82,6 +84,8 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
     private readonly IAuthRegistrationService _authRegistrationService;
     private readonly IVDeleSpecialistProfileRepository _profileRepository;
     private readonly IVDeleSpecialistsReadDbContext _ivDeleSpecialistsReadDbContext;
+    private readonly IVDeleCustomerProfileRepository _customerProfileRepository;        // ← новое
+    private readonly IVDeleCustomersReadDbContext _ivDeleCustomersReadDbContext;        // ← новое
     private readonly ITransactionManager _transactionManager;
     private readonly IValidator<RegisterSpecialistByPhoneRequest> _validator;
     private readonly IAuthTokenService _authTokenService;
@@ -91,6 +95,8 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
         IAuthRegistrationService authRegistrationService,
         IVDeleSpecialistProfileRepository profileRepository,
         IVDeleSpecialistsReadDbContext ivDeleSpecialistsReadDbContext,
+        IVDeleCustomerProfileRepository customerProfileRepository,                       // ← новое
+        IVDeleCustomersReadDbContext ivDeleCustomersReadDbContext,                       // ← новое
         ITransactionManager transactionManager,
         IValidator<RegisterSpecialistByPhoneRequest> validator,
         IAuthTokenService authTokenService,
@@ -99,6 +105,8 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
         _authRegistrationService = authRegistrationService;
         _profileRepository = profileRepository;
         _ivDeleSpecialistsReadDbContext = ivDeleSpecialistsReadDbContext;
+        _customerProfileRepository = customerProfileRepository;                          // ← новое
+        _ivDeleCustomersReadDbContext = ivDeleCustomersReadDbContext;                    // ← новое
         _transactionManager = transactionManager;
         _validator = validator;
         _authTokenService = authTokenService;
@@ -134,7 +142,7 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
                 null,
                 request.Email,
                 ApplicationCodes.VDele,
-                RoleCodes.Specialist),
+                new[] { RoleCodes.Customer, RoleCodes.Specialist }),  // ← обе роли
             cancellationToken);
 
         if (authResult.IsFailure)
@@ -144,6 +152,27 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
         }
 
         var userId = authResult.Value;
+        
+        // Customer baseline: если customer-профиля нет — создать минимальный
+        var customerProfileExists = await _ivDeleCustomersReadDbContext.CustomerProfilesRead
+            .AnyAsync(x => x.UserId == userId, cancellationToken);
+
+        if (!customerProfileExists)
+        {
+            var customerProfileResult = VDeleCustomerProfile.Create(
+                userId,
+                request.FullName,
+                request.CityId,
+                request.Email);
+
+            if (customerProfileResult.IsFailure)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return customerProfileResult.Error!.ToErrors();
+            }
+
+            await _customerProfileRepository.Add(customerProfileResult.Value!, cancellationToken);
+        }
 
         var profileExists = await _ivDeleSpecialistsReadDbContext.SpecialistProfilesRead
             .AnyAsync(x => x.UserId == userId, cancellationToken);
@@ -189,7 +218,7 @@ public sealed class VDeleRegisterVDeleSpecialistByPhoneHandler
             "VDele specialist registered. UserId: {UserId}",
             userId);
 
-        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, ApplicationCodes.VDele, cancellationToken);
         if (tokenResult.IsFailure)
             return tokenResult.Error;
 

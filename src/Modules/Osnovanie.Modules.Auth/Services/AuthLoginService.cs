@@ -33,11 +33,10 @@ public sealed class AuthLoginService : IAuthLoginService
           _transactionManager = transactionManager;
       }
 
-      public async Task<Result<string, Errors>> LoginByPhone(
+      public async Task<Result<string, Errors>> LoginByPhoneAnyRole(
           string phone,
           string code,
           string applicationCode,
-          string roleCode,
           CancellationToken cancellationToken)
       {
           var user = await _userManager.Users
@@ -46,12 +45,12 @@ public sealed class AuthLoginService : IAuthLoginService
           if (user == null)
               return AuthErrors.InvalidCredentials().ToErrors();
 
-          var hasAccess = await _readDb.UserAccessesRead
+          var hasAnyAccess = await _readDb.UserAccessesRead
               .AnyAsync(x => x.UserId == user.Id
-                          && x.ApplicationCode == applicationCode
-                          && x.RoleCode == roleCode, cancellationToken);
+                             && x.ApplicationCode == applicationCode,
+                  cancellationToken);
 
-          if (!hasAccess)
+          if (!hasAnyAccess)
               return AuthErrors.InvalidCredentials().ToErrors();
 
           var verificationCode = await _phoneCodeRepository.GetLatestActiveByPhone(
@@ -72,7 +71,7 @@ public sealed class AuthLoginService : IAuthLoginService
           if (saveResult.IsFailure)
               return saveResult.Error.ToErrors();
 
-          return await _authTokenService.GenerateTokenForUser(user.Id, cancellationToken);
+          return await _authTokenService.GenerateTokenForUser(user.Id, applicationCode, cancellationToken);
       }
       
       public async Task<Result<string, Errors>> LoginByUsername(
@@ -98,7 +97,7 @@ public sealed class AuthLoginService : IAuthLoginService
           if (!hasAccess)
               return AuthErrors.InvalidCredentials().ToErrors();
 
-          return await _authTokenService.GenerateTokenForUser(user.Id, cancellationToken);
+          return await _authTokenService.GenerateTokenForUser(user.Id, applicationCode, cancellationToken);
       }
 
   }

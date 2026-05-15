@@ -6,4 +6,4 @@ public sealed record RegisterUserByPhoneCommand(
     string? Password,
     string? Email,
     string ApplicationCode,
-    string RoleCode);
+    IReadOnlyList<string> RoleCodes);

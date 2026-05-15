@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.VLavke.Admins.Features;
+using Osnovanie.Modules.VLavke.Auth.Features;
 using Osnovanie.Modules.VLavke.Customers.Features;
 using Osnovanie.Modules.VLavke.Sellers.Features;
 
@@ -16,9 +17,10 @@ public static class VLavkeModule
 
         services.AddScoped<RegisterVLavkeCustomerByPhoneHandler>();
         services.AddScoped<RegisterSellerByPhoneHandler>();
-        services.AddScoped<VLavkeLoginCustomerByPhoneHandler>();
-        services.AddScoped<VLavkeLoginSellerByPhoneHandler>();
         services.AddScoped<VLavkeAdminLoginHandler>();
+
+        services.AddScoped<VLavkeLoginByPhoneHandler>();
+        services.AddScoped<VLavkeAuthMeHandler>();
 
         services.AddValidatorsFromAssembly(typeof(VLavkeModule).Assembly);
 

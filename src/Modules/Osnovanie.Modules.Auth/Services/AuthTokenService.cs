@@ -25,20 +25,23 @@ public class AuthTokenService : IAuthTokenService
         _authReadDbConnection = authReadDbConnection;
     }
     
-    public async Task<Result<string, Errors>> GenerateTokenForUser(Guid userId, CancellationToken ct)
+    public async Task<Result<string, Errors>> GenerateTokenForUser(
+        Guid userId,
+        string applicationCode,
+        CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null)
-        {
             return AuthErrors.InvalidCredentials().ToErrors();
-        }
-        
-        var role = await _authReadDbConnection.UserAccessesRead.FirstOrDefaultAsync(u => u.UserId == user.Id, ct);
-        if (role == null)
-        {
+
+        var roles = await _authReadDbConnection.UserAccessesRead
+            .Where(u => u.UserId == user.Id && u.ApplicationCode == applicationCode)
+            .Select(u => u.RoleCode)
+            .ToListAsync(ct);
+
+        if (roles.Count == 0)
             return AuthErrors.InvalidCredentials().ToErrors();
-        }
-        
-        return _tokenGenerator.GenerateToken(user, role.RoleCode, role.ApplicationCode);
+
+        return _tokenGenerator.GenerateToken(user, roles, applicationCode);
     }
 }

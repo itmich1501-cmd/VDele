@@ -6,5 +6,5 @@ namespace Osnovanie.Modules.Auth.Abstractions.Services;
 
 public interface ITokenGenerator
 {
-    Result<string, Errors> GenerateToken(User user, string roleCode, string applicationCode);
+    Result<string, Errors> GenerateToken(User user, IReadOnlyList<string> roleCodes, string applicationCode);
 }

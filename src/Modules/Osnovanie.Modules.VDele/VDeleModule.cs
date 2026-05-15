@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Osnovanie.Framework.EndpointSettings;
 using Osnovanie.Modules.VDele.Admins.Features;
+using Osnovanie.Modules.VDele.Auth.Features;
 using Osnovanie.Modules.VDele.Customers.Features;
 using Osnovanie.Modules.VDele.Specialists.Features;
 
@@ -16,9 +17,11 @@ public static class VDeleModule
 
         services.AddScoped<RegisterVDeleCustomerByPhoneHandler>();
         services.AddScoped<VDeleRegisterVDeleSpecialistByPhoneHandler>();
-        services.AddScoped<VDeleLoginCustomerByPhoneHandler>();
-        services.AddScoped<VDeleLoginSpecialistByPhoneHandler>();
         services.AddScoped<VDeleAdminLoginHandler>();
+
+        services.AddScoped<VDeleLoginByPhoneHandler>();
+        services.AddScoped<AddSpecialistProfileHandler>();
+        services.AddScoped<VDeleAuthMeHandler>();
 
         services.AddValidatorsFromAssembly(typeof(VDeleModule).Assembly);
 

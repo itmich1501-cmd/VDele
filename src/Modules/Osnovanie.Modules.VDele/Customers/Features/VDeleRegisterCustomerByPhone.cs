@@ -127,7 +127,7 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
                 null,
                 request.Email,
                 ApplicationCodes.VDele,
-                RoleCodes.Customer),
+                new[] { RoleCodes.Customer }),
             cancellationToken);
 
         if (authResult.IsFailure)
@@ -181,7 +181,7 @@ public sealed class RegisterVDeleCustomerByPhoneHandler
             "VDele customer registered. UserId: {UserId}",
             userId);
         
-        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, cancellationToken);
+        var tokenResult = await _authTokenService.GenerateTokenForUser(userId, ApplicationCodes.VDele, cancellationToken);
         if (tokenResult.IsFailure)
             return tokenResult.Error;
 

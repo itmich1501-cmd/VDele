@@ -82,28 +82,61 @@ public sealed class AuthRegistrationService : IAuthRegistrationService
             user = existingUser;
         }
 
-        var accessExists = await _readDb.UserAccessesRead
-            .AnyAsync(x => x.UserId == user.Id
-                        && x.ApplicationCode == command.ApplicationCode
-                        && x.RoleCode == command.RoleCode, cancellationToken);
+        var existingRoles = await _readDb.UserAccessesRead
+            .Where(x => x.UserId == user.Id && x.ApplicationCode == command.ApplicationCode)
+            .Select(x => x.RoleCode)
+            .ToListAsync(cancellationToken);
 
-        if (accessExists)
-            return AuthErrors.UserAlreadyExists().ToErrors();
+        foreach (var roleCode in command.RoleCodes)
+        {
+            if (existingRoles.Contains(roleCode))
+                continue;
 
-        var userAccessResult = UserAccess.Create(
-            user.Id,
-            command.ApplicationCode,
-            command.RoleCode);
+            var userAccessResult = UserAccess.Create(
+                user.Id,
+                command.ApplicationCode,
+                roleCode);
 
-        if (userAccessResult.IsFailure)
-            return userAccessResult.Error!.ToErrors();
+            if (userAccessResult.IsFailure)
+                return userAccessResult.Error!.ToErrors();
 
-        await _userAccessRepository.Add(userAccessResult.Value!, cancellationToken);
+            await _userAccessRepository.Add(userAccessResult.Value!, cancellationToken);
+        }
 
         var markAsUsedResult = verificationCode.MarkAsUsed();
         if (markAsUsedResult.IsFailure)
             return markAsUsedResult.Error!.ToErrors();
 
         return user.Id;
+    }
+
+    public async Task<UnitResult<Errors>> AddRolesToUser(
+        Guid userId,
+        string applicationCode,
+        IReadOnlyList<string> roleCodes,
+        CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+            return AuthErrors.UserNotFound(userId).ToErrors();
+
+        var existingRoles = await _readDb.UserAccessesRead
+            .Where(x => x.UserId == userId && x.ApplicationCode == applicationCode)
+            .Select(x => x.RoleCode)
+            .ToListAsync(cancellationToken);
+
+        foreach (var roleCode in roleCodes)
+        {
+            if (existingRoles.Contains(roleCode))
+                continue;
+
+            var userAccessResult = UserAccess.Create(userId, applicationCode, roleCode);
+            if (userAccessResult.IsFailure)
+                return userAccessResult.Error!.ToErrors();
+
+            await _userAccessRepository.Add(userAccessResult.Value!, cancellationToken);
+        }
+
+        return UnitResult.Success<Errors>();
     }
 }
