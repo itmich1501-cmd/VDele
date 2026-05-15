@@ -19,10 +19,7 @@ public static class DependencyIndection
     private static IServiceCollection AddOpenApiSpec(this IServiceCollection services)
     {
         services.AddOpenApi();
-
-        // если используешь SwaggerGen:
-        // services.AddSwaggerGen(...);
-
+        
         return services;
     }private static IServiceCollection AddCors(this IServiceCollection services)
     {
