@@ -81,7 +81,8 @@ public static class DependencyInjection
         services.AddScoped<IVLavkeSellersReadDbContext>(
             sp => sp.GetRequiredService<AppDbContext>());
         
-        services.AddIdentity<User, IdentityRole<Guid>>()
+        services.AddIdentityCore<User>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
