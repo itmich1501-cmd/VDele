@@ -7,4 +7,8 @@ public interface IVDeleSpecialistProfileRepository
     Task Add(
         VDeleSpecialistProfile vDeleSpecialistProfile,
         CancellationToken cancellationToken);
+
+    Task<VDeleSpecialistProfile?> GetByUserId(
+        Guid userId,
+        CancellationToken cancellationToken);
 }

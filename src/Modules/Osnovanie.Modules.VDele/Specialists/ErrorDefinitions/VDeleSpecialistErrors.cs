@@ -9,6 +9,11 @@ public static class VDeleSpecialistErrors
             "vdele.specialist.already_exists",
             $"Профиль специалиста для пользователя {userId} уже существует");
 
+    public static Error ProfileNotFound(Guid userId) =>
+        Error.NotFound(
+            "vdele.specialist.profile.not_found",
+            $"Профиль специалиста для пользователя {userId} не найден");
+
     public static Error UserIdIsEmpty() =>
         Error.Validation(
             "vdele.specialist.user_id.empty",

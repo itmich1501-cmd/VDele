@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Osnovanie.Infrastructure.Database;
 using Osnovanie.Modules.VDele.Customers.Contracts;
 using Osnovanie.Modules.VDele.Customers.Domain;
@@ -23,5 +24,10 @@ public sealed class VDeleCustomerProfileRepository : IVDeleCustomerProfileReposi
         CancellationToken cancellationToken)
     {
         await _dbContext.VDeleCustomerProfiles.AddAsync(profile, cancellationToken);
+    }
+
+    public async Task<VDeleCustomerProfile?> GetByUserId(Guid userId, CancellationToken cancellationToken)
+    {
+        return await _dbContext.VDeleCustomerProfiles.FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken: cancellationToken);
     }
 }

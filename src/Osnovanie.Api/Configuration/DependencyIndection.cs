@@ -18,10 +18,15 @@ public static class DependencyIndection
     
     private static IServiceCollection AddOpenApiSpec(this IServiceCollection services)
     {
-        services.AddOpenApi();
-        
+        services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+        });
+
         return services;
-    }private static IServiceCollection AddCors(this IServiceCollection services)
+    }
+    
+    private static IServiceCollection AddCors(this IServiceCollection services)
     {
         services.AddCors(options => {
             options.AddDefaultPolicy(p =>

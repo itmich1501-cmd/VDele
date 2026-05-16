@@ -7,4 +7,8 @@ public interface IVLavkeCustomerProfileRepository
     Task Add(
         VLavkeCustomerProfile vLavkeCustomerProfile,
         CancellationToken cancellationToken);
+
+    Task<VLavkeCustomerProfile?> GetByUserId(
+        Guid userId,
+        CancellationToken cancellationToken);
 }

@@ -26,4 +26,9 @@ public static class VLavkeCustomerErrors
         Error.Conflict(
             "vdele.customer.already_exists",
             $"Профиль заказчика для пользователя {userId} уже существует");
+
+    public static Error ProfileNotFound(Guid userId) =>
+        Error.NotFound(
+            "vlavke.customer.profile.not_found",
+            $"Профиль заказчика для пользователя {userId} не найден");
 }

@@ -21,6 +21,10 @@ public static class VLavkeModule
 
         services.AddScoped<VLavkeLoginByPhoneHandler>();
         services.AddScoped<VLavkeAuthMeHandler>();
+        services.AddScoped<VLavkeGetCustomerMeHandler>();
+        services.AddScoped<VLavkeGetSellerMeHandler>();
+        services.AddScoped<VLavkeEditCustomerProfileHandler>();
+        services.AddScoped<VLavkeEditSellerProfileHandler>();
 
         services.AddValidatorsFromAssembly(typeof(VLavkeModule).Assembly);
 

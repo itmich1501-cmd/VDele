@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Osnovanie.Infrastructure.Database;
 using Osnovanie.Modules.VLavke.Sellers.Contracts;
 using Osnovanie.Modules.VLavke.Sellers.Domain;
@@ -18,5 +19,11 @@ public sealed class VLavkeSellerProfileRepository : IVLavkeSellerProfileReposito
         CancellationToken cancellationToken)
     {
         await _dbContext.VLavkeSellerProfiles.AddAsync(profile, cancellationToken);
+    }
+
+    public Task<VLavkeSellerProfile?> GetByUserId(Guid userId, CancellationToken cancellationToken)
+    {
+        return _dbContext.VLavkeSellerProfiles
+            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
     }
 }

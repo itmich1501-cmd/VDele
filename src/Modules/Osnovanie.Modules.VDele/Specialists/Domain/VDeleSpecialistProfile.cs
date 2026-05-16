@@ -71,4 +71,31 @@ public sealed class VDeleSpecialistProfile
 
         return specialistProfile;
     }
+
+    public UnitResult<Error> Update(
+        string fullName,
+        Guid cityId,
+        string? email,
+        string? about)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            return VDeleSpecialistErrors.FullNameIsEmpty();
+
+        if (fullName.Length > 200)
+            return VDeleSpecialistErrors.FullNameIsTooLong();
+
+        if (cityId == Guid.Empty)
+            return VDeleSpecialistErrors.CityIdIsEmpty();
+
+        if (!string.IsNullOrWhiteSpace(about) && about.Length > 2000)
+            return VDeleSpecialistErrors.AboutIsTooLong();
+
+        FullName = fullName.Trim();
+        CityId = cityId;
+        Email = string.IsNullOrWhiteSpace(email) ? null : email.Trim();
+        About = string.IsNullOrWhiteSpace(about) ? null : about.Trim();
+        UpdatedAt = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
 }

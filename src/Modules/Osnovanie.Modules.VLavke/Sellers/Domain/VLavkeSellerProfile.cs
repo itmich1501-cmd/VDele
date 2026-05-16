@@ -62,4 +62,26 @@ public sealed class VLavkeSellerProfile
 
         return sellerProfile;
     }
+
+    public UnitResult<Error> Update(
+        string fullName,
+        Guid mainCityId,
+        string? email)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            return VLavkeSellerErrors.FullNameIsEmpty();
+
+        if (fullName.Length > 200)
+            return VLavkeSellerErrors.FullNameIsTooLong();
+
+        if (mainCityId == Guid.Empty)
+            return VLavkeSellerErrors.MainCityIdIsEmpty();
+
+        FullName = fullName.Trim();
+        MainCityId = mainCityId;
+        Email = string.IsNullOrWhiteSpace(email) ? null : email.Trim();
+        UpdatedAt = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
 }

@@ -59,4 +59,23 @@ public sealed class VDeleCustomerProfile
             cityId,
             string.IsNullOrWhiteSpace(email) ? null : email.Trim());
     }
+
+    public UnitResult<Error> Update(
+        string fullName,
+        Guid cityId,
+        string? email)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            return VDeleCustomerErrors.FullNameIsEmpty();
+
+        if (cityId == Guid.Empty)
+            return VDeleCustomerErrors.CityIdIsEmpty();
+
+        FullName = fullName.Trim();
+        CityId = cityId;
+        Email = string.IsNullOrWhiteSpace(email) ? null : email.Trim();
+        UpdatedAt = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
 }

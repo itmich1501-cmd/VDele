@@ -22,6 +22,10 @@ public static class VDeleModule
         services.AddScoped<VDeleLoginByPhoneHandler>();
         services.AddScoped<AddSpecialistProfileHandler>();
         services.AddScoped<VDeleAuthMeHandler>();
+        services.AddScoped<VDeleGetSpecialistMeHandler>();
+        services.AddScoped<VDeleGetCustomerMeHandler>();
+        services.AddScoped<VDeleEditCustomerProfileHandler>();
+        services.AddScoped<VDeleEditSpecialistProfileHandler>();
 
         services.AddValidatorsFromAssembly(typeof(VDeleModule).Assembly);
 

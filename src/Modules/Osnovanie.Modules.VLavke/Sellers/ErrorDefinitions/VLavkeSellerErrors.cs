@@ -9,6 +9,11 @@ public static class VLavkeSellerErrors
             "vlavke.seller.already_exists",
             $"Профиль продавца для пользователя {userId} уже существует");
 
+    public static Error ProfileNotFound(Guid userId) =>
+        Error.NotFound(
+            "vlavke.seller.profile.not_found",
+            $"Профиль продавца для пользователя {userId} не найден");
+
     public static Error UserIdIsEmpty() =>
         Error.Validation(
             "vlavke.seller.user_id.empty",

@@ -11,4 +11,8 @@ public interface IVDeleCustomerProfileRepository
     Task Add(
         VDeleCustomerProfile vDeleCustomerProfile,
         CancellationToken cancellationToken);
+    
+    Task<VDeleCustomerProfile?> GetByUserId(
+        Guid userId, 
+        CancellationToken cancellationToken);
 }
