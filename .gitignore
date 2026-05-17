@@ -1,5 +1,6 @@
 # Secrets — НЕ коммитить
 .env
+.env.*
 *.env
 !.env.example
 
@@ -57,3 +58,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Crash dumps
+hs_err_pid*.log
+replay_pid*.log
+
+# Local secrets
+password.txt
+*.env.local

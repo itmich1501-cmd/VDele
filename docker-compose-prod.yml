@@ -1,4 +1,4 @@
-# Production docker-compose для VDele API
+# Production docker-compose для Osnovanie API (VDele + VLavke маркетплейсы)
 #
 # Запуск: docker compose -f docker-compose-prod.yml up -d
 # Остановка: docker compose -f docker-compose-prod.yml down
@@ -8,7 +8,7 @@
 
 services:
   postgres:
-    container_name: vdele-postgres
+    container_name: osnovanie-postgres
     image: postgres:17
     restart: always
     environment:
@@ -22,7 +22,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - vdele-network
+      - osnovanie-network
     # Healthcheck — Docker понимает что БД готова принимать подключения.
     # Без этого API может стартовать раньше БД и упасть.
     healthcheck:
@@ -32,10 +32,8 @@ services:
       retries: 5
 
   osnovanie-api:
-    container_name: vdele-api
-    build:
-      context: .
-      dockerfile: src/Osnovanie.Api/Dockerfile
+    container_name: osnovanie-api
+    image: ghcr.io/itmich1501-cmd/osnovanie-api:latest
     restart: always
     # API слушает на 9001 внутри контейнера, наружу публикуем тоже 9001.
     # Если перед API будет nginx (рекомендую) — порт наружу можно убрать,
@@ -70,11 +68,11 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - vdele-network
+      - osnovanie-network
 
   nginx:
     image: nginx:alpine
-    container_name: vdele-nginx
+    container_name: osnovanie-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -87,10 +85,10 @@ services:
     restart: always
     mem_limit: 128m
     networks:
-      - vdele-network
+      - osnovanie-network
     
   seq:
-    container_name: vdele-seq
+    container_name: osnovanie-seq
     image: datalust/seq:latest
     restart: always
     environment:
@@ -102,12 +100,12 @@ services:
     volumes:
       - seq_data:/data
     networks:
-      - vdele-network
+      - osnovanie-network
 
 # Отдельная сеть — изоляция от других compose проектов на сервере.
 # Сервисы внутри общаются по именам контейнеров (postgres, osnovanie-api).
 networks:
-  vdele-network:
+  osnovanie-network:
     driver: bridge
     driver_opts:
       com.docker.network.driver.mtu: "1450"
